@@ -1,3482 +1,1797 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#05070b">
-
-    <title>Pathfolio — Your achievements. Your future.</title>
-
-    <meta name="description"
-        content="Organize your achievements into a portfolio that moves you forward.">
-
-    <style>
-
-        /* ─────────────────────────────────────────
-           PATHFOLIO — MAIN DESIGN
-        ───────────────────────────────────────── */
-
-        :root {
-            color-scheme: dark;
-
-            --bg: #05070b;
-            --panel: #0d1420;
-            --panel-light: #111b29;
-            --panel2: #0a0f18;
-
-            --line: #1d2a3d;
-            --line-light: #2a3d57;
-
-            --text: #f5f7fb;
-            --muted: #9aa8bc;
-
-            --blue: #4c8dff;
-            --electric: #65b8ff;
-            --purple: #8c7dff;
-            --good: #72ddb1;
-            --danger: #ff858e;
-
-            font: 15px/1.55 Inter, ui-sans-serif, system-ui,
-                -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-
-            background:
-                radial-gradient(ellipse at 15% -10%, #102345 0, transparent 42%),
-                radial-gradient(ellipse at 90% 10%, #111b38 0, transparent 35%),
-                var(--bg);
-
-            color: var(--text);
-        }
-
-        button,
-        input,
-        textarea,
-        select {
-            font: inherit;
-        }
-
-        button,
-        a {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        button {
-            color: inherit;
-            cursor: pointer;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        /* ─────────────────────────────────────────
-           ANIMATIONS
-        ───────────────────────────────────────── */
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes softGlow {
-            0%, 100% {
-                box-shadow: 0 0 25px #4c8dff22;
-            }
-
-            50% {
-                box-shadow: 0 0 45px #4c8dff44;
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(1deg);
-            }
-
-            50% {
-                transform: translateY(-7px) rotate(1deg);
-            }
-        }
-
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: translateY(15px) scale(.97);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .animate-in {
-            animation: fadeUp .55s cubic-bezier(.2, .8, .2, 1) both;
-        }
-
-        /* ─────────────────────────────────────────
-           GENERAL LAYOUT
-        ───────────────────────────────────────── */
-
-        .shell {
-            max-width: 1200px;
-            margin: auto;
-            padding: 0 28px;
-        }
-
-        /* ─────────────────────────────────────────
-           TOP BAR
-        ───────────────────────────────────────── */
-
-        .top {
-            height: 76px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            border-bottom: 1px solid #ffffff0d;
-
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-
-            font-size: 19px;
-            font-weight: 720;
-            letter-spacing: -.04em;
-
-            transition: transform .25s ease;
-        }
-
-        .brand:hover {
-            transform: scale(1.025);
-        }
-
-        .logo {
-            width: 31px;
-            height: 31px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 10px;
-
-            background:
-                linear-gradient(145deg, #73c5ff, #3976ef);
-
-            color: #06101f;
-            font-weight: 900;
-
-            box-shadow: 0 0 28px #4c8dff44;
-
-            transition: transform .35s cubic-bezier(.2, .9, .3, 1);
-        }
-
-        .brand:hover .logo {
-            transform: rotate(-8deg) scale(1.08);
-        }
-
-        .topnav {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-        }
-
-        /* ─────────────────────────────────────────
-           BUTTONS
-        ───────────────────────────────────────── */
-
-        .btn {
-            position: relative;
-
-            border: 1px solid var(--line);
-            background: #0e1622;
-
-            padding: 10px 17px;
-            border-radius: 999px;
-
-            font-weight: 620;
-
-            overflow: hidden;
-
-            transition:
-                transform .22s cubic-bezier(.2, .8, .2, 1),
-                border-color .22s ease,
-                background .22s ease,
-                box-shadow .22s ease;
-        }
-
-        .btn::before {
-            content: "";
-
-            position: absolute;
-            inset: 0;
-
-            opacity: 0;
-
-            background:
-                linear-gradient(
-                    120deg,
-                    transparent 20%,
-                    #ffffff14 50%,
-                    transparent 80%
-                );
-
-            transform: translateX(-100%);
-
-            transition: opacity .2s ease;
-        }
-
-        .btn:hover::before {
-            opacity: 1;
-            transform: translateX(100%);
-            transition: transform .65s ease;
-        }
-
-        .btn:hover,
-        .btn:focus-visible {
-            transform: translateY(-2px) scale(1.015);
-
-            border-color: #4c8dff99;
-            background: #111d2d;
-
-            box-shadow: 0 8px 24px #0004;
-
-            outline: none;
-        }
-
-        .btn:active {
-            transform: scale(.96);
-        }
-
-        .btn.primary {
-            border-color: transparent;
-
-            background:
-                linear-gradient(105deg, #4384fa, #62b9ff);
-
-            color: #06101c;
-
-            box-shadow: 0 8px 28px #367bf633;
-        }
-
-        .btn.primary:hover {
-            box-shadow:
-                0 12px 35px #367bf655,
-                0 0 20px #65b8ff22;
-        }
-
-        .btn.ghost {
-            background: transparent;
-        }
-
-        .btn.small {
-            padding: 8px 13px;
-            font-size: 13px;
-        }
-
-        /* ─────────────────────────────────────────
-           HOME PAGE
-        ───────────────────────────────────────── */
-
-        .hero {
-            min-height: 620px;
-
-            padding: 100px 0 78px;
-
-            display: grid;
-            grid-template-columns: 1.05fr .95fr;
-            align-items: center;
-            gap: 56px;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-
-            color: #a8caff;
-
-            font-size: 12px;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-
-            border: 1px solid #31538166;
-            background: #0b1524;
-
-            border-radius: 999px;
-            padding: 7px 12px;
-
-            animation: fadeUp .5s ease both;
-        }
-
-        .dot {
-            width: 7px;
-            height: 7px;
-
-            background: var(--electric);
-            border-radius: 50%;
-
-            box-shadow: 0 0 12px var(--electric);
-        }
-
-        h1 {
-            font-size: clamp(44px, 6.3vw, 75px);
-            line-height: 1.02;
-
-            letter-spacing: -.065em;
-
-            margin: 25px 0 20px;
-            max-width: 690px;
-        }
-
-        .gradient {
-            background:
-                linear-gradient(100deg, #f6f8ff 15%, #82bdff 85%);
-
-            color: transparent;
-            background-clip: text;
-            -webkit-background-clip: text;
-        }
-
-        .lead {
-            max-width: 540px;
-
-            color: var(--muted);
-
-            font-size: 17px;
-            line-height: 1.75;
-        }
-
-        .actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-
-            margin-top: 30px;
-        }
-
-        .tiny {
-            margin-top: 17px;
-
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        /* ─────────────────────────────────────────
-           PORTFOLIO PREVIEW
-        ───────────────────────────────────────── */
-
-        .preview {
-            position: relative;
-
-            padding: 19px;
-
-            border: 1px solid #8ebdff21;
-
-            background:
-                linear-gradient(145deg, #111c2b, #0a1019);
-
-            border-radius: 24px;
-
-            box-shadow:
-                0 35px 100px #0008,
-                0 0 80px #367bf617;
-
-            animation:
-                fadeUp .7s ease both,
-                float 6s ease-in-out 1s infinite;
-        }
-
-        .preview::before {
-            content: "";
-
-            position: absolute;
-            inset: -1px;
-
-            border-radius: inherit;
-
-            background:
-                linear-gradient(
-                    125deg,
-                    #65b8ff33,
-                    transparent 40%
-                );
-
-            pointer-events: none;
-        }
-
-        .prev-head {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-
-            padding: 7px 4px 20px;
-        }
-
-        .avatar {
-            width: 48px;
-            height: 48px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(145deg, #365b8e, #182c47);
-
-            color: #c7ddff;
-            font-weight: 700;
-        }
-
-        .prev-head strong {
-            display: block;
-        }
-
-        .prev-head small,
-        .muted {
-            color: var(--muted);
-        }
-
-        .tag {
-            display: inline-block;
-
-            margin: 3px 3px 3px 0;
-            padding: 4px 9px;
-
-            border: 1px solid #243248;
-            background: #101a28;
-
-            border-radius: 999px;
-
-            color: #b9c8dd;
-            font-size: 11px;
-        }
-
-        .preview h3 {
-            margin: 13px 0 8px;
-            font-size: 14px;
-        }
-
-        .preview p {
-            margin: 0;
-
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .prev-card {
-            margin-top: 11px;
-            padding: 14px;
-
-            border: 1px solid #ffffff10;
-            background: #0a111b;
-
-            border-radius: 14px;
-
-            transition:
-                transform .25s ease,
-                border-color .25s ease;
-        }
-
-        .prev-card:hover {
-            transform: translateX(4px);
-            border-color: #4c8dff55;
-        }
-
-        /* ─────────────────────────────────────────
-           SECTIONS
-        ───────────────────────────────────────── */
-
-        .features {
-            padding: 45px 0 85px;
-        }
-
-        .section-title {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .section-title h2 {
-            margin: 0 0 8px;
-
-            font-size: 32px;
-            letter-spacing: -.04em;
-        }
-
-        .section-title p {
-            margin: 0;
-            color: var(--muted);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-        }
-
-        .feature,
-        .card {
-            background:
-                linear-gradient(145deg, #0e1622, #0a1018);
-
-            border: 1px solid #ffffff11;
-            border-radius: 17px;
-
-            padding: 20px;
-
-            transition:
-                transform .3s cubic-bezier(.2, .8, .2, 1),
-                border-color .3s ease,
-                box-shadow .3s ease;
-        }
-
-        .feature:hover {
-            transform: translateY(-5px);
-
-            border-color: #4c8dff44;
-
-            box-shadow:
-                0 20px 50px #0004,
-                0 0 25px #367bf611;
-        }
-
-        .icon {
-            width: 36px;
-            height: 36px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 11px;
-
-            color: #8ac5ff;
-            background: #172941;
-
-            font-size: 18px;
-        }
-
-        .feature h3 {
-            margin: 16px 0 7px;
-            font-size: 15px;
-        }
-
-        .feature p {
-            margin: 0;
-
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .steps {
-            padding: 20px 0 85px;
-        }
-
-        .step-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-        }
-
-        .step-no {
-            color: #7fb9ff;
-
-            font-size: 12px;
-            letter-spacing: .12em;
-        }
-
-        .step-grid h3 {
-            margin: 12px 0 6px;
-        }
-
-        /* ─────────────────────────────────────────
-           FOOTER
-        ───────────────────────────────────────── */
-
-        .footer {
-            padding: 25px 0;
-
-            border-top: 1px solid #ffffff10;
-
-            color: var(--muted);
-            font-size: 12px;
-
-            text-align: center;
-        }
-
-        /* ─────────────────────────────────────────
-           APP LAYOUT
-        ───────────────────────────────────────── */
-
-        .app-layout {
-            display: grid;
-            grid-template-columns: 220px 1fr;
-            gap: 30px;
-
-            padding: 32px 0 70px;
-        }
-
-        .side {
-            padding-right: 17px;
-            border-right: 1px solid #ffffff10;
-        }
-
-        .side button {
-            width: 100%;
-
-            margin: 3px 0;
-            padding: 11px 13px;
-
-            text-align: left;
-
-            border: 0;
-            background: transparent;
-
-            border-radius: 10px;
-
-            color: var(--muted);
-
-            transition:
-                background .2s ease,
-                color .2s ease,
-                transform .2s ease;
-        }
-
-        .side button:hover {
-            transform: translateX(3px);
-            background: #101a29;
-            color: var(--text);
-        }
-
-        .side button.active {
-            background:
-                linear-gradient(90deg, #152943, #111c2b);
-
-            color: var(--text);
-
-            box-shadow: inset 2px 0 var(--blue);
-        }
-
-        .side .group {
-            padding: 17px 13px 5px;
-
-            color: #65758b;
-
-            font-size: 10px;
-            letter-spacing: .13em;
-            text-transform: uppercase;
-        }
-
-        .main {
-            min-width: 0;
-        }
-
-        .welcome {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 15px;
-
-            margin-bottom: 25px;
-        }
-
-        .welcome h1 {
-            margin: 0 0 5px;
-
-            font-size: 34px;
-        }
-
-        /* ─────────────────────────────────────────
-           DASHBOARD
-        ───────────────────────────────────────── */
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 13px;
-
-            margin: 20px 0;
-        }
-
-        .stat {
-            transition:
-                transform .25s ease,
-                border-color .25s ease;
-        }
-
-        .stat:hover {
-            transform: translateY(-3px);
-            border-color: #4c8dff44;
-        }
-
-        .stat strong {
-            display: block;
-
-            margin-top: 9px;
-
-            font-size: 26px;
-        }
-
-        .stat span {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .section-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-
-            margin: 27px 0 14px;
-        }
-
-        .section-head h2 {
-            margin: 0;
-            font-size: 19px;
-        }
-
-        .list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .item {
-            position: relative;
-        }
-
-        .item h3 {
-            margin: 0 0 5px;
-            font-size: 15px;
-        }
-
-        .item p {
-            margin: 5px 0;
-
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 7px;
-
-            margin-top: 14px;
-        }
-
-        .empty {
-            padding: 34px 20px;
-
-            border: 1px dashed #293a50;
-            border-radius: 16px;
-
-            text-align: center;
-
-            color: var(--muted);
-        }
-
-        .empty b {
-            display: block;
-
-            margin-bottom: 6px;
-
-            color: var(--text);
-        }
-
-        /* ─────────────────────────────────────────
-           FORMS
-        ───────────────────────────────────────── */
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .field.full {
-            grid-column: 1 / -1;
-        }
-
-        .field label {
-            color: #b7c5d8;
-            font-size: 12px;
-        }
-
-        .field input,
-        .field textarea,
-        .field select {
-            width: 100%;
-
-            padding: 10px 12px;
-
-            border: 1px solid #26364b;
-            background: #080e16;
-
-            border-radius: 10px;
-
-            color: var(--text);
-
-            outline: none;
-
-            transition:
-                border-color .2s ease,
-                box-shadow .2s ease,
-                background .2s ease;
-        }
-
-        .field input:hover,
-        .field textarea:hover,
-        .field select:hover {
-            border-color: #39516e;
-        }
-
-        .field input:focus,
-        .field textarea:focus,
-        .field select:focus {
-            border-color: var(--blue);
-
-            box-shadow: 0 0 0 3px #4c8dff16;
-            background: #0a111b;
-        }
-
-        .field textarea {
-            min-height: 88px;
-            resize: vertical;
-        }
-
-        /* ─────────────────────────────────────────
-           PHOTO UPLOAD
-        ───────────────────────────────────────── */
-
-        .upload-box {
-            position: relative;
-
-            padding: 25px;
-
-            border: 1px dashed #385575;
-            background: #09111c;
-
-            border-radius: 14px;
-
-            text-align: center;
-
-            color: var(--muted);
-
-            cursor: pointer;
-
-            transition:
-                border-color .25s ease,
-                background .25s ease,
-                transform .25s ease;
-        }
-
-        .upload-box:hover {
-            transform: translateY(-2px);
-
-            border-color: var(--electric);
-            background: #0c1726;
-        }
-
-        .upload-box strong {
-            display: block;
-
-            margin-bottom: 4px;
-
-            color: var(--text);
-        }
-
-        .upload-box input {
-            display: none;
-        }
-
-        .photo-preview {
-            display: none;
-
-            width: 100%;
-            max-height: 250px;
-
-            margin-top: 12px;
-
-            object-fit: contain;
-
-            border: 1px solid var(--line);
-            border-radius: 12px;
-
-            background: #05080d;
-        }
-
-        /* ─────────────────────────────────────────
-           MODALS
-        ───────────────────────────────────────── */
-
-        .modal-back {
-            position: fixed;
-            inset: 0;
-
-            z-index: 100;
-
-            display: grid;
-            place-items: center;
-
-            padding: 18px;
-
-            background: #02050bdf;
-
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .modal {
-            width: min(620px, 100%);
-            max-height: 92vh;
-
-            overflow: auto;
-
-            padding: 23px;
-
-            border: 1px solid #26364b;
-            background:
-                linear-gradient(145deg, #0d1622, #080e16);
-
-            border-radius: 22px;
-
-            box-shadow:
-                0 25px 90px #000b,
-                0 0 50px #367bf611;
-
-            animation: modalIn .35s cubic-bezier(.2, .8, .2, 1);
-        }
-
-        .modal-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            margin-bottom: 18px;
-        }
-
-        .modal-head h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .close {
-            width: 34px;
-            height: 34px;
-
-            border: 1px solid transparent;
-            background: transparent;
-
-            border-radius: 50%;
-
-            color: var(--muted);
-            font-size: 23px;
-
-            transition: all .2s ease;
-        }
-
-        .close:hover {
-            background: #182433;
-            border-color: var(--line);
-            color: white;
-            transform: rotate(90deg);
-        }
-
-        /* ─────────────────────────────────────────
-           NOTIFICATIONS
-        ───────────────────────────────────────── */
-
-        .toast {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-
-            z-index: 200;
-
-            padding: 12px 17px;
-
-            border: 1px solid #31517a;
-            background: #132238;
-
-            border-radius: 13px;
-
-            box-shadow: 0 15px 45px #0008;
-
-            animation: fadeUp .35s ease;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .pill {
-            padding: 5px 10px;
-
-            border: 1px solid #29405c;
-            border-radius: 99px;
-
-            color: #a9caff;
-            font-size: 11px;
-        }
-
-        .progress {
-            height: 5px;
-
-            overflow: hidden;
-
-            background: #172338;
-
-            border-radius: 10px;
-        }
-
-        .progress i {
-            display: block;
-
-            height: 100%;
-            width: 0;
-
-            background:
-                linear-gradient(90deg, var(--blue), var(--electric));
-
-            border-radius: inherit;
-
-            transition: width .6s cubic-bezier(.2, .8, .2, 1);
-        }
-
-        /* ─────────────────────────────────────────
-           ABOUT PROJECT
-        ───────────────────────────────────────── */
-
-        .about-hero {
-            max-width: 780px;
-
-            padding: 90px 0 100px;
-        }
-
-        .about-hero h1 {
-            margin-bottom: 18px;
-        }
-
-        .about-card {
-            margin-top: 35px;
-
-            padding: 28px;
-
-            border: 1px solid #ffffff12;
-
-            background:
-                linear-gradient(145deg, #0e1826, #090f18);
-
-            border-radius: 22px;
-
-            box-shadow: 0 25px 70px #0004;
-        }
-
-        .about-card h2 {
-            margin-top: 0;
-        }
-
-        .about-textarea {
-            width: 100%;
-            min-height: 250px;
-
-            padding: 18px;
-
-            border: 1px solid #26364b;
-            background: #070c13;
-
-            border-radius: 14px;
-
-            color: var(--text);
-
-            resize: vertical;
-
-            outline: none;
-
-            line-height: 1.7;
-
-            transition:
-                border-color .2s ease,
-                box-shadow .2s ease;
-        }
-
-        .about-textarea:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 4px #4c8dff14;
-        }
-
-        .mobile-nav {
-            display: none;
-        }
-
-        /* ─────────────────────────────────────────
-           MOBILE
-        ───────────────────────────────────────── */
-
-        @media (max-width: 850px) {
-
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 38px;
-
-                padding: 70px 0;
-            }
-
-            .preview {
-                max-width: 560px;
-            }
-
-            .grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .app-layout {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-
-            .side {
-                display: none;
-            }
-
-            .mobile-nav {
-                display: flex;
-
-                overflow: auto;
-                gap: 7px;
-
-                padding: 12px 0;
-
-                border-bottom: 1px solid #ffffff12;
-            }
-
-            .mobile-nav button {
-                white-space: nowrap;
-
-                padding: 8px 12px;
-
-                border: 1px solid var(--line);
-                background: #0b121d;
-
-                border-radius: 99px;
-
-                color: var(--muted);
-                font-size: 12px;
-            }
-
-            .mobile-nav button.active {
-                border-color: var(--blue);
-                color: white;
-            }
-
-        }
-
-        @media (max-width: 560px) {
-
-            .shell {
-                padding: 0 17px;
-            }
-
-            .top {
-                height: 64px;
-            }
-
-            .topnav .ghost {
-                display: none;
-            }
-
-            .hero {
-                padding: 58px 0;
-            }
-
-            .lead {
-                font-size: 15px;
-            }
-
-            .grid,
-            .step-grid,
-            .list {
-                grid-template-columns: 1fr;
-            }
-
-            .stat-grid {
-                gap: 7px;
-            }
-
-            .stat {
-                padding: 14px;
-            }
-
-            .stat strong {
-                font-size: 21px;
-            }
-
-            .stat span {
-                font-size: 11px;
-            }
-
-            .welcome {
-                flex-direction: column;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .field.full {
-                grid-column: auto;
-            }
-
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-
-            *,
-            *::before,
-            *::after {
-                animation: none !important;
-                transition: none !important;
-                scroll-behavior: auto !important;
-            }
-
-        }
-
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#05070b">
+
+<title>Pathfolio — Your achievements. Your future.</title>
+
+<style>
+:root{
+    --bg:#05070b;
+    --panel:#0d1420;
+    --panel2:#080e16;
+    --line:#223149;
+    --text:#f5f7fb;
+    --muted:#98a7ba;
+    --blue:#4c8dff;
+    --electric:#65b8ff;
+    --accent:#4c8dff;
+    --accent-rgb:76,141,255;
+    font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+    margin:0;
+    min-height:100vh;
+    color:var(--text);
+    overflow-x:hidden;
+    background:
+        radial-gradient(ellipse at 15% -10%,rgba(var(--accent-rgb),.18),transparent 42%),
+        radial-gradient(ellipse at 90% 10%,rgba(80,110,255,.12),transparent 35%),
+        var(--bg);
+    transition:background .45s ease;
+}
+
+button,input,textarea,select{font:inherit}
+button{color:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+.hidden{display:none!important}
+
+.shell{
+    width:min(1200px,calc(100% - 40px));
+    margin:auto;
+}
+
+/* ── Animations ── */
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0) rotate(1deg)}
+    50%{transform:translateY(-8px) rotate(1deg)}
+}
+
+@keyframes glowPulse{
+    0%,100%{box-shadow:0 0 20px rgba(var(--accent-rgb),.12)}
+    50%{box-shadow:0 0 42px rgba(var(--accent-rgb),.28)}
+}
+
+@keyframes strip{
+    from{transform:translateX(-140%)}
+    to{transform:translateX(140%)}
+}
+
+@keyframes messageIn{
+    from{opacity:0;transform:translateY(8px) scale(.98)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.animate-in{animation:fadeUp .55s cubic-bezier(.2,.8,.2,1) both}
+
+/* ── Top bar ── */
+
+.top{
+    height:76px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #ffffff0d;
+    backdrop-filter:blur(18px);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    border:0;
+    background:transparent;
+    font-size:19px;
+    font-weight:750;
+    letter-spacing:-.04em;
+}
+
+.logo{
+    width:33px;
+    height:33px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background:linear-gradient(145deg,var(--electric),var(--accent));
+    color:#06101f;
+    font-weight:900;
+    box-shadow:0 0 28px rgba(var(--accent-rgb),.35);
+    transition:transform .3s ease;
+}
+
+.brand:hover .logo{transform:rotate(-8deg) scale(1.08)}
+
+.topnav{display:flex;gap:9px;align-items:center}
+
+/* ── Buttons ── */
+
+.btn{
+    position:relative;
+    overflow:hidden;
+    padding:10px 17px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:#0d1622;
+    font-weight:650;
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+
+.btn::after,
+.spaceship-hover::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    width:45%;
+    background:linear-gradient(90deg,transparent,rgba(var(--accent-rgb),.75),transparent);
+    opacity:0;
+    pointer-events:none;
+}
+
+.btn:hover::after,
+.spaceship-hover:hover::after{
+    opacity:1;
+    animation:strip .7s ease;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    border-color:rgba(var(--accent-rgb),.7);
+    box-shadow:0 10px 28px rgba(0,0,0,.3);
+}
+
+.btn:active{transform:scale(.97)}
+
+.btn.primary{
+    border-color:transparent;
+    color:#06101c;
+    background:linear-gradient(105deg,var(--accent),var(--electric));
+    box-shadow:0 8px 28px rgba(var(--accent-rgb),.22);
+}
+
+.btn.ghost{background:transparent}
+.btn.small{padding:8px 13px;font-size:13px}
+
+/* ── Landing ── */
+
+.hero{
+    min-height:620px;
+    padding:95px 0 75px;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    align-items:center;
+    gap:56px;
+}
+
+.eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 12px;
+    border:1px solid rgba(var(--accent-rgb),.3);
+    border-radius:999px;
+    background:#0b1524;
+    color:#a8caff;
+    font-size:12px;
+    letter-spacing:.11em;
+    text-transform:uppercase;
+}
+
+.dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--electric);
+    box-shadow:0 0 12px var(--electric);
+}
+
+h1{
+    font-size:clamp(43px,6vw,74px);
+    line-height:1.03;
+    letter-spacing:-.065em;
+    margin:25px 0 20px;
+}
+
+.gradient{
+    color:transparent;
+    background:linear-gradient(100deg,#f6f8ff 10%,var(--electric));
+    background-clip:text;
+    -webkit-background-clip:text;
+}
+
+.lead{
+    max-width:560px;
+    color:var(--muted);
+    font-size:17px;
+    line-height:1.75;
+}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+
+.preview{
+    position:relative;
+    padding:20px;
+    border:1px solid rgba(var(--accent-rgb),.18);
+    border-radius:24px;
+    background:linear-gradient(145deg,#111c2b,#090f18);
+    box-shadow:0 35px 100px #0009,0 0 70px rgba(var(--accent-rgb),.09);
+    animation:fadeUp .7s ease both,float 6s ease-in-out 1s infinite;
+}
+
+.prev-head{display:flex;align-items:center;gap:13px;padding:7px 4px 20px}
+
+.avatar{
+    width:49px;height:49px;
+    display:grid;place-items:center;
+    border-radius:50%;
+    background:linear-gradient(145deg,#365b8e,#182c47);
+    color:#c7ddff;font-weight:800;
+}
+
+.muted,.prev-head small{color:var(--muted)}
+
+.pill{
+    padding:5px 10px;
+    border:1px solid rgba(var(--accent-rgb),.35);
+    border-radius:99px;
+    color:#a9caff;
+    font-size:11px;
+}
+
+.tag{
+    display:inline-block;
+    margin:3px 3px 3px 0;
+    padding:4px 9px;
+    border:1px solid #26364b;
+    border-radius:999px;
+    background:#101a28;
+    color:#b9c8dd;
+    font-size:11px;
+}
+
+.prev-card,.card{
+    border:1px solid #ffffff12;
+    border-radius:17px;
+    background:linear-gradient(145deg,#0e1622,#090f18);
+}
+
+.prev-card{
+    margin-top:11px;
+    padding:14px;
+    transition:transform .25s ease,border-color .25s ease;
+}
+
+.prev-card:hover{
+    transform:translateX(5px);
+    border-color:rgba(var(--accent-rgb),.5);
+}
+
+/* ── Sections ── */
+
+.features,.steps{padding:45px 0 85px}
+.section-title{text-align:center;margin-bottom:30px}
+.section-title h2{font-size:32px;letter-spacing:-.04em;margin:0 0 8px}
+.section-title p{margin:0;color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+.feature{
+    padding:20px;
+    border:1px solid #ffffff11;
+    border-radius:17px;
+    background:linear-gradient(145deg,#0e1622,#090f18);
+    transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+}
+
+.feature:hover{
+    transform:translateY(-5px);
+    border-color:rgba(var(--accent-rgb),.4);
+    box-shadow:0 20px 50px #0004;
+}
+
+.icon{
+    width:37px;height:37px;
+    display:grid;place-items:center;
+    border-radius:11px;
+    background:rgba(var(--accent-rgb),.14);
+    color:var(--electric);
+}
+
+.feature h3{margin:16px 0 7px;font-size:15px}
+.feature p{margin:0;color:var(--muted);font-size:13px}
+
+.footer{
+    padding:25px 0;
+    border-top:1px solid #ffffff10;
+    text-align:center;
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* ── App layout ── */
+
+.app-layout{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:30px;
+    padding:32px 0 70px;
+}
+
+.side{
+    padding-right:17px;
+    border-right:1px solid #ffffff10;
+}
+
+.side button{
+    position:relative;
+    width:100%;
+    margin:3px 0;
+    padding:11px 13px;
+    overflow:hidden;
+    text-align:left;
+    border:0;
+    border-radius:10px;
+    background:transparent;
+    color:var(--muted);
+    transition:background .2s,color .2s,transform .2s;
+}
+
+.side button:hover{
+    transform:translateX(3px);
+    background:#101a29;
+    color:var(--text);
+}
+
+.side button.active{
+    color:white;
+    background:linear-gradient(90deg,rgba(var(--accent-rgb),.2),#111c2b);
+    box-shadow:inset 2px 0 var(--accent);
+}
+
+.group{
+    padding:17px 13px 5px;
+    color:#65758b;
+    font-size:10px;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+}
+
+.welcome{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.welcome h1{margin:0 0 5px;font-size:34px}
+.main{min-width:0}
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin:20px 0;
+}
+
+.card{padding:20px}
+.stat strong{display:block;margin-top:9px;font-size:27px}
+.stat span{color:var(--muted);font-size:13px}
+
+.list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin:27px 0 14px;
+}
+
+.section-head h2{margin:0;font-size:19px}
+
+.empty{
+    padding:34px 20px;
+    border:1px dashed #293a50;
+    border-radius:16px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.empty b{display:block;color:var(--text);margin-bottom:6px}
+
+/* ── Forms ── */
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;color:#b7c5d8}
+
+.field input,.field textarea,.field select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #26364b;
+    border-radius:10px;
+    outline:none;
+    background:#080e16;
+    color:var(--text);
+}
+
+.field input:focus,.field textarea:focus,.field select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12);
+}
+
+.field textarea{min-height:90px;resize:vertical}
+
+.upload-box{
+    padding:22px;
+    border:1px dashed #385575;
+    border-radius:14px;
+    background:#09111c;
+    text-align:center;
+    color:var(--muted);
+    cursor:pointer;
+}
+
+.upload-box strong{display:block;color:white;margin-bottom:4px}
+.upload-box input{display:none}
+
+.photo-preview{
+    display:none;
+    width:100%;
+    max-height:250px;
+    margin-top:12px;
+    object-fit:contain;
+    border-radius:12px;
+    border:1px solid var(--line);
+}
+
+/* ── Modal / toast ── */
+
+.modal-back{
+    position:fixed;inset:0;z-index:100;
+    display:grid;place-items:center;
+    padding:18px;
+    background:#02050be6;
+    backdrop-filter:blur(10px);
+}
+
+.modal{
+    width:min(620px,100%);
+    max-height:92vh;
+    overflow:auto;
+    padding:23px;
+    border:1px solid #26364b;
+    border-radius:22px;
+    background:linear-gradient(145deg,#0d1622,#080e16);
+    box-shadow:0 25px 90px #000b;
+    animation:fadeUp .3s ease;
+}
+
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal-head h2{margin:0;font-size:20px}
+
+.close{
+    width:35px;height:35px;
+    border:0;border-radius:50%;
+    background:transparent;color:var(--muted);
+    font-size:23px;
+}
+
+.close:hover{background:#182433;color:white}
+
+.toast{
+    position:fixed;right:20px;bottom:20px;z-index:300;
+    padding:12px 17px;
+    border:1px solid rgba(var(--accent-rgb),.5);
+    border-radius:13px;
+    background:#132238;
+    box-shadow:0 15px 45px #0008;
+    animation:fadeUp .35s ease;
+}
+
+/* ── About page ── */
+
+.about-hero{padding:70px 0 45px;text-align:center}
+.about-hero h1{font-size:clamp(40px,5vw,64px)}
+
+.bot-wrap{
+    width:min(850px,100%);
+    margin:35px auto 70px;
+    text-align:left;
+    border:1px solid rgba(var(--accent-rgb),.24);
+    border-radius:25px;
+    overflow:hidden;
+    background:linear-gradient(145deg,#0d1725,#070c13);
+    box-shadow:0 30px 100px #0008,0 0 80px rgba(var(--accent-rgb),.08);
+}
+
+.bot-header{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:17px 20px;
+    border-bottom:1px solid #ffffff0d;
+}
+
+.bot-orb{
+    width:40px;height:40px;border-radius:13px;
+    display:grid;place-items:center;
+    background:linear-gradient(145deg,var(--electric),var(--accent));
+    color:#06101c;
+    box-shadow:0 0 25px rgba(var(--accent-rgb),.4);
+}
+
+.bot-header strong{display:block}
+.bot-header small{color:var(--muted)}
+
+.chat-messages{
+    height:350px;
+    overflow:auto;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.message{
+    max-width:78%;
+    padding:11px 14px;
+    border-radius:15px;
+    animation:messageIn .3s ease;
+}
+
+.message.bot{
+    align-self:flex-start;
+    background:#111c2b;
+    border:1px solid #ffffff0d;
+}
+
+.message.user{
+    align-self:flex-end;
+    background:rgba(var(--accent-rgb),.18);
+    border:1px solid rgba(var(--accent-rgb),.3);
+}
+
+.chat-input{
+    display:flex;
+    gap:10px;
+    padding:15px;
+    border-top:1px solid #ffffff0d;
+}
+
+.chat-input input{
+    flex:1;
+    min-width:0;
+    padding:12px 14px;
+    border:1px solid #26364b;
+    border-radius:12px;
+    outline:none;
+    background:#080e16;
+    color:white;
+}
+
+.about-showcase{padding:20px 0 90px}
+
+.showcase-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+}
+
+.feature-preview{
+    min-height:360px;
+    padding:25px;
+    position:relative;
+    overflow:hidden;
+}
+
+.feature-preview h3{font-size:22px;margin:0 0 8px}
+.feature-preview>p{color:var(--muted);max-width:430px}
+
+/* Mini customization mockup */
+
+.mini-app{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:120px 1fr;
+    min-height:180px;
+    border:1px solid #ffffff12;
+    border-radius:15px;
+    overflow:hidden;
+    background:#080e16;
+}
+
+.mini-side{
+    padding:12px 8px;
+    border-right:1px solid #ffffff0d;
+}
+
+.mini-tab{
+    position:relative;
+    overflow:hidden;
+    margin:4px 0;
+    padding:8px;
+    border-radius:7px;
+    color:#7f8da0;
+    font-size:11px;
+}
+
+.mini-tab.personalize{
+    color:white;
+    background:rgba(var(--accent-rgb),.15);
+    cursor:default;
+}
+
+.mini-tab.personalize::after{
+    content:"";
+    position:absolute;
+    top:0;bottom:0;
+    left:-45%;
+    width:38%;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+    filter:blur(2px);
+    opacity:.8;
+    transition:left .6s ease;
+}
+
+.feature-preview:hover .mini-tab.personalize::after{left:115%}
+
+.mini-content{padding:16px}
+
+.color-dots{display:flex;gap:9px;margin-top:13px}
+.color-dot{width:27px;height:27px;border-radius:50%;border:2px solid #ffffff22}
+.color-dot.one{background:#4c8dff}
+.color-dot.two{background:#8c7dff}
+.color-dot.three{background:#72ddb1}
+.color-dot.four{background:#ff858e}
+
+.mini-profile{
+    display:flex;gap:10px;align-items:center;
+    margin-top:15px;
+    padding:10px;
+    border:1px solid #ffffff0d;
+    border-radius:10px;
+}
+
+.mini-avatar{
+    width:35px;height:35px;border-radius:50%;
+    background:linear-gradient(145deg,#365b8e,#182c47);
+}
+
+.mini-lines{flex:1}
+.mini-lines i{display:block;height:6px;margin:5px 0;border-radius:99px;background:#243248}
+.mini-lines i:first-child{width:70%}
+
+/* Achievement mockup */
+
+.mini-certificate{
+    margin:30px auto 0;
+    max-width:400px;
+    padding:20px;
+    border:1px solid rgba(var(--accent-rgb),.3);
+    border-radius:16px;
+    background:linear-gradient(145deg,#111c2b,#080e16);
+    transform:rotate(-2deg);
+    transition:transform .4s ease;
+}
+
+.feature-preview:hover .mini-certificate{transform:rotate(0) translateY(-4px)}
+.mini-certificate .certificate-mark{
+    width:38px;height:38px;
+    display:grid;place-items:center;
+    border-radius:12px;
+    background:rgba(var(--accent-rgb),.15);
+    color:var(--electric);
+}
+
+.progress{
+    height:5px;
+    overflow:hidden;
+    border-radius:10px;
+    background:#172338;
+}
+
+.progress i{
+    display:block;height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--electric));
+}
+
+.mobile-nav{display:none}
+
+/* ── Responsive ── */
+
+@media(max-width:850px){
+    .hero{grid-template-columns:1fr;gap:38px;padding:70px 0}
+    .grid{grid-template-columns:repeat(2,1fr)}
+    .app-layout{grid-template-columns:1fr;gap:14px}
+    .side{display:none}
+    .mobile-nav{display:flex;gap:7px;overflow:auto;padding:12px 0;border-bottom:1px solid #ffffff12}
+    .mobile-nav button{
+        white-space:nowrap;padding:8px 12px;
+        border:1px solid var(--line);border-radius:99px;
+        background:#0b121d;color:var(--muted);
+    }
+    .mobile-nav button.active{border-color:var(--accent);color:white}
+}
+
+@media(max-width:600px){
+    .shell{width:min(100% - 28px,1200px)}
+    .top{height:65px}
+    .topnav .ghost{display:none}
+    .grid,.step-grid,.list,.showcase-grid{grid-template-columns:1fr}
+    .form-grid{grid-template-columns:1fr}
+    .field.full{grid-column:auto}
+    .stat-grid{gap:7px}
+    .stat{padding:14px}
+    .stat strong{font-size:21px}
+    .welcome{flex-direction:column}
+    .mini-app{grid-template-columns:95px 1fr}
+    .chat-messages{height:330px}
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation:none!important;
+        transition:none!important;
+        scroll-behavior:auto!important;
+    }
+}
+</style>
 </head>
 
 <body>
-
-    <div id="root"></div>
-
-    <script>
-
-        (() => {
-
-            "use strict";
-
-            const $ = selector => document.querySelector(selector);
-
-            const esc = value =>
-                String(value ?? "").replace(/[&<>"']/g, character => ({
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#39;"
-                }[character]));
-
-            /*
-             * Certificate categories.
-             * Kept as a useful list for organizing certificates.
-             */
-
-            const categories = [
-                "Academic",
-                "Technology",
-                "Science",
-                "Arts",
-                "Sports",
-                "Leadership",
-                "Volunteering",
-                "Competitions",
-                "Other"
-            ];
-
-            let user = null;
-
-            let profile = {
-                full_name: "",
-                bio: "",
-                grade: "",
-                section: "",
-                school_name: "",
-                username: "",
-                skills: [],
-                interests: [],
-                portfolio_published: false
-            };
-
-            let records = {
-                certificates: [],
-                achievements: [],
-                projects: []
-            };
-
-            let aboutProject = "";
-
-            let tab = "Overview";
-            let toastTimer = null;
-
-            /* ─────────────────────────────────────
-               NOTIFICATION
-            ───────────────────────────────────── */
-
-            function notify(message) {
-
-                document.querySelector(".toast")?.remove();
-
-                const toast = document.createElement("div");
-
-                toast.className = "toast";
-                toast.textContent = message;
-
-                document.body.append(toast);
-
-                clearTimeout(toastTimer);
-
-                toastTimer = setTimeout(() => {
-                    toast.remove();
-                }, 3000);
-            }
-
-            /* ─────────────────────────────────────
-               TOP BAR
-            ───────────────────────────────────── */
-
-            function topbar() {
-
-                return `
-                    <header class="top shell">
-
-                        <button
-                            class="brand"
-                            data-action="home"
-                            style="border:0;background:transparent"
-                            aria-label="Pathfolio home"
-                        >
-                            <span class="logo">P</span>
-                            <span>Pathfolio</span>
-                        </button>
-
-                        <nav class="topnav" id="topnav"></nav>
-
-                    </header>
-                `;
-            }
-
-            function renderTopnav() {
-
-                const navigation = $("#topnav");
-
-                if (!navigation) return;
-
-                navigation.innerHTML = user
-                    ? `
-                        <button
-                            class="btn ghost small"
-                            data-action="about"
-                        >
-                            About This Project
-                        </button>
-
-                        <button
-                            class="btn small"
-                            data-action="dashboard"
-                        >
-                            Dashboard
-                        </button>
-
-                        <button
-                            class="btn small"
-                            data-action="signout"
-                        >
-                            Sign out
-                        </button>
-                    `
-                    : `
-                        <button
-                            class="btn ghost small"
-                            data-action="about"
-                        >
-                            About This Project
-                        </button>
-
-                        <button
-                            class="btn ghost small"
-                            data-action="signin"
-                        >
-                            Sign in
-                        </button>
-
-                        <button
-                            class="btn primary small"
-                            data-action="start"
-                        >
-                            Get started
-                        </button>
-                    `;
-            }
-
-            /* ─────────────────────────────────────
-               HOME PAGE
-            ───────────────────────────────────── */
-
-            function landing() {
-
-                $("#root").innerHTML = `
-
-                    ${topbar()}
-
-                    <main class="shell">
-
-                        <section class="hero">
-
-                            <div class="animate-in">
-
-                                <span class="eyebrow">
-                                    <i class="dot"></i>
-                                    A portfolio for what comes next
-                                </span>
-
-                                <h1>
-                                    Every achievement
-                                    <span class="gradient">
-                                        tells a story.
-                                    </span>
-                                </h1>
-
-                                <p class="lead">
-                                    Bring your certificates, projects,
-                                    and proudest moments together in one
-                                    professional portfolio—ready for the
-                                    opportunities ahead.
-                                </p>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn primary"
-                                        data-action="start"
-                                    >
-                                        Get started →
-                                    </button>
-
-                                    <button
-                                        class="btn ghost"
-                                        data-action="demo"
-                                    >
-                                        Explore demo
-                                    </button>
-
-                                    <button
-                                        class="btn ghost"
-                                        data-action="about"
-                                    >
-                                        About this project
-                                    </button>
-
-                                </div>
-
-                                <p class="tiny">
-                                    Your achievements. Your future.
-                                </p>
-
-                            </div>
-
-                            <div class="preview">
-
-                                <div class="prev-head">
-
-                                    <div class="avatar">AM</div>
-
-                                    <div>
-                                        <strong>Alex Morgan</strong>
-                                        <small>
-                                            Student · Northstar Academy
-                                        </small>
-                                    </div>
-
-                                    <span
-                                        class="pill"
-                                        style="margin-left:auto"
-                                    >
-                                        SAMPLE
-                                    </span>
-
-                                </div>
-
-                                <p>
-                                    Curious learner exploring technology,
-                                    design, and the ways they can make
-                                    a difference.
-                                </p>
-
-                                <h3>Skills & interests</h3>
-
-                                <span class="tag">Robotics</span>
-                                <span class="tag">Python</span>
-                                <span class="tag">Design</span>
-
-                                <div class="prev-card">
-                                    <strong style="font-size:13px">
-                                        Regional Science Fair
-                                    </strong>
-                                    <p>
-                                        First place · Science · May 2025
-                                    </p>
-                                </div>
-
-                                <div class="prev-card">
-                                    <strong style="font-size:13px">
-                                        Community Garden Planner
-                                    </strong>
-                                    <p>
-                                        Project · Research & web design
-                                    </p>
-                                </div>
-
-                            </div>
-
-                        </section>
-
-                        <section class="features">
-
-                            <div class="section-title">
-
-                                <h2>
-                                    Make your hard work visible.
-                                </h2>
-
-                                <p>
-                                    One thoughtful home for every part
-                                    of your journey.
-                                </p>
-
-                            </div>
-
-                            <div class="grid">
-
-                                <article class="feature">
-                                    <span class="icon">▤</span>
-                                    <h3>
-                                        Keep certificates organized
-                                    </h3>
-                                    <p>
-                                        Store certificate details and
-                                        proof together, ready whenever
-                                        you need them.
-                                    </p>
-                                </article>
-
-                                <article class="feature">
-                                    <span class="icon">✧</span>
-                                    <h3>
-                                        Celebrate achievements
-                                    </h3>
-                                    <p>
-                                        Capture milestones, service,
-                                        awards, and experiences.
-                                    </p>
-                                </article>
-
-                                <article class="feature">
-                                    <span class="icon">◈</span>
-                                    <h3>
-                                        Show your work
-                                    </h3>
-                                    <p>
-                                        Describe projects, the skills
-                                        you used, and what you learned.
-                                    </p>
-                                </article>
-
-                                <article class="feature">
-                                    <span class="icon">↗</span>
-                                    <h3>
-                                        Share on your terms
-                                    </h3>
-                                    <p>
-                                        Your portfolio starts private
-                                        and stays yours to control.
-                                    </p>
-                                </article>
-
-                            </div>
-
-                        </section>
-
-                        <section class="steps">
-
-                            <div class="section-title">
-                                <h2>
-                                    A clearer path forward.
-                                </h2>
-                            </div>
-
-                            <div class="step-grid">
-
-                                <article class="feature">
-
-                                    <span class="step-no">
-                                        01 — COLLECT
-                                    </span>
-
-                                    <h3>
-                                        Add your milestones
-                                    </h3>
-
-                                    <p>
-                                        Build a record of certificates,
-                                        achievements, and projects.
-                                    </p>
-
-                                </article>
-
-                                <article class="feature">
-
-                                    <span class="step-no">
-                                        02 — PERSONALIZE
-                                    </span>
-
-                                    <h3>
-                                        Make it yours
-                                    </h3>
-
-                                    <p>
-                                        Set up your profile and choose
-                                        exactly what a visitor can see.
-                                    </p>
-
-                                </article>
-
-                                <article class="feature">
-
-                                    <span class="step-no">
-                                        03 — SHARE
-                                    </span>
-
-                                    <h3>
-                                        Open new doors
-                                    </h3>
-
-                                    <p>
-                                        Publish when you're ready and
-                                        share your portfolio.
-                                    </p>
-
-                                </article>
-
-                            </div>
-
-                        </section>
-
-                    </main>
-
-                    <footer class="footer shell">
-                        © ${new Date().getFullYear()}
-                        Pathfolio · Your achievements. Your future.
-                    </footer>
-                `;
-
-                renderTopnav();
-            }
-
-            /* ─────────────────────────────────────
-               ABOUT THIS PROJECT
-            ───────────────────────────────────── */
-
-            function aboutPage() {
-
-                $("#root").innerHTML = `
-
-                    ${topbar()}
-
-                    <main class="shell">
-
-                        <section class="about-hero animate-in">
-
-                            <span class="eyebrow">
-                                <i class="dot"></i>
-                                Behind Pathfolio
-                            </span>
-
-                            <h1>
-                                More than a list of
-                                <span class="gradient">
-                                    achievements.
-                                </span>
-                            </h1>
-
-                            <p class="lead">
-                                This is the space where you can explain
-                                your idea, why you created Pathfolio,
-                                and what you hope the project will become.
-                            </p>
-
-                            <div class="about-card">
-
-                                <h2>
-                                    About this project
-                                </h2>
-
-                                <p class="muted">
-                                    Write your story here. This can explain
-                                    the purpose of Pathfolio, the problem
-                                    it solves, or your future plans for it.
-                                </p>
-
-                                <textarea
-                                    id="about-text"
-                                    class="about-textarea"
-                                    placeholder="Start writing about your project..."
-                                >${esc(aboutProject)}</textarea>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn primary"
-                                        data-action="save-about"
-                                    >
-                                        Save changes
-                                    </button>
-
-                                    <button
-                                        class="btn ghost"
-                                        data-action="home"
-                                    >
-                                        ← Back home
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </section>
-
-                    </main>
-
-                    <footer class="footer shell">
-                        © ${new Date().getFullYear()}
-                        Pathfolio · Your achievements. Your future.
-                    </footer>
-                `;
-
-                renderTopnav();
-            }
-
-            /* ─────────────────────────────────────
-               AUTH MODAL
-            ───────────────────────────────────── */
-
-            function authModal(mode) {
-
-                const signup = mode === "signup";
-
-                document.body.insertAdjacentHTML(
-                    "beforeend",
-
-                    `
-                    <div class="modal-back" id="modal">
-
-                        <section
-                            class="modal"
-                            role="dialog"
-                            aria-modal="true"
-                        >
-
-                            <div class="modal-head">
-
-                                <h2>
-                                    ${
-                                        signup
-                                            ? "Create your account"
-                                            : "Welcome back"
-                                    }
-                                </h2>
-
-                                <button
-                                    class="close"
-                                    data-action="close"
-                                >
-                                    ×
-                                </button>
-
-                            </div>
-
-                            <p class="muted"
-                               style="font-size:13px">
-
-                                ${
-                                    signup
-                                        ? "Start collecting your milestones."
-                                        : "Sign in to continue building your portfolio."
-                                }
-
-                            </p>
-
-                            <form id="auth-form">
-
-                                ${
-                                    signup
-                                        ? `
-                                            <div class="field">
-                                                <label for="name">
-                                                    Full name
-                                                </label>
-
-                                                <input
-                                                    id="name"
-                                                    required
-                                                    maxlength="100"
-                                                >
-                                            </div>
-                                        `
-                                        : ""
-                                }
-
-                                <div
-                                    class="field"
-                                    style="margin-top:12px"
-                                >
-
-                                    <label for="email">
-                                        Email
-                                    </label>
-
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        required
-                                    >
-
-                                </div>
-
-                                <div
-                                    class="field"
-                                    style="margin-top:12px"
-                                >
-
-                                    <label for="password">
-                                        Password
-                                    </label>
-
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        minlength="8"
-                                        required
-                                    >
-
-                                </div>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="btn primary"
-                                        type="submit"
-                                    >
-                                        ${
-                                            signup
-                                                ? "Create account"
-                                                : "Sign in"
-                                        }
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                        </section>
-
+<div id="root"></div>
+
+<script>
+(() => {
+"use strict";
+
+const $ = s => document.querySelector(s);
+
+const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+const categories = [
+    "Academic","Technology","Science","Arts",
+    "Sports","Leadership","Volunteering",
+    "Competitions","Other"
+];
+
+/* ── App data ── */
+
+let user = null;
+let tab = "Overview";
+
+let profile = {
+    full_name:"",
+    email:"",
+    bio:"",
+    grade:"",
+    school_name:"",
+    username:"",
+    skills:[],
+    interests:[],
+    photo:"",
+    portfolio_published:false
+};
+
+let records = {
+    certificates:[],
+    achievements:[],
+    projects:[]
+};
+
+let settings = {
+    accent:"#4c8dff",
+    background:"#05070b",
+    theme:"Classic Black & Blue"
+};
+
+/* ── Local storage ── */
+
+function saveData(){
+    localStorage.setItem("pathfolio-user",JSON.stringify(user));
+    localStorage.setItem("pathfolio-profile",JSON.stringify(profile));
+    localStorage.setItem("pathfolio-records",JSON.stringify(records));
+    localStorage.setItem("pathfolio-settings",JSON.stringify(settings));
+}
+
+function loadData(){
+    try{
+        user = JSON.parse(localStorage.getItem("pathfolio-user")) || null;
+        profile = {...profile,...(JSON.parse(localStorage.getItem("pathfolio-profile")) || {})};
+        records = {...records,...(JSON.parse(localStorage.getItem("pathfolio-records")) || {})};
+        settings = {...settings,...(JSON.parse(localStorage.getItem("pathfolio-settings")) || {})};
+    }catch(error){
+        console.log("Pathfolio data could not be loaded.");
+    }
+    applyTheme();
+}
+
+function hexToRgb(hex){
+    const value = hex.replace("#","");
+    const number = parseInt(value.length === 3
+        ? value.split("").map(x=>x+x).join("")
+        : value,16);
+    return `${(number>>16)&255},${(number>>8)&255},${number&255}`;
+}
+
+function applyTheme(){
+    document.documentElement.style.setProperty("--accent",settings.accent);
+    document.documentElement.style.setProperty("--accent-rgb",hexToRgb(settings.accent));
+    document.documentElement.style.setProperty("--bg",settings.background);
+    document.querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content",settings.background);
+}
+
+/* ── Notification ── */
+
+let toastTimer;
+function notify(message){
+    $(".toast")?.remove();
+    const toast=document.createElement("div");
+    toast.className="toast";
+    toast.textContent=message;
+    document.body.append(toast);
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>toast.remove(),3000);
+}
+
+/* ── Navigation ── */
+
+function topbar(){
+    return `
+    <header class="top shell">
+        <button class="brand" data-action="home" aria-label="Pathfolio home">
+            <span class="logo">P</span>
+            <span>Pathfolio</span>
+        </button>
+        <nav class="topnav" id="topnav"></nav>
+    </header>`;
+}
+
+function renderTopnav(){
+    const nav=$("#topnav");
+    if(!nav)return;
+
+    nav.innerHTML=user ? `
+        <button class="btn ghost small" data-action="about">About This Project</button>
+        <button class="btn small" data-action="dashboard">Dashboard</button>
+        <button class="btn small" data-action="signout">Sign out</button>
+    ` : `
+        <button class="btn ghost small" data-action="about">About This Project</button>
+        <button class="btn ghost small" data-action="signin">Sign in</button>
+        <button class="btn primary small" data-action="start">Get started</button>
+    `;
+}
+
+/* ── Landing page ── */
+
+function landing(){
+    $("#root").innerHTML=`
+    ${topbar()}
+    <main class="shell">
+
+        <section class="hero">
+            <div class="animate-in">
+                <span class="eyebrow"><i class="dot"></i>A portfolio for what comes next</span>
+
+                <h1>
+                    Every achievement
+                    <span class="gradient">tells a story.</span>
+                </h1>
+
+                <p class="lead">
+                    Bring your certificates, projects and proudest moments
+                    together in one professional portfolio—ready for the
+                    opportunities ahead.
+                </p>
+
+                <div class="actions">
+                    <button class="btn primary" data-action="start">Get started →</button>
+                    <button class="btn ghost" data-action="demo">Explore demo</button>
+                    <button class="btn ghost" data-action="about">About this project</button>
+                </div>
+            </div>
+
+            <div class="preview">
+                <div class="prev-head">
+                    <div class="avatar">AM</div>
+                    <div>
+                        <strong>Alex Morgan</strong>
+                        <small>Student · Northstar Academy</small>
                     </div>
-                    `
-                );
-            }
+                    <span class="pill" style="margin-left:auto">SAMPLE</span>
+                </div>
 
-            /* ─────────────────────────────────────
-               APP NAVIGATION
-            ───────────────────────────────────── */
+                <p class="muted">
+                    Curious learner exploring technology, design, and the
+                    ways they can make a difference.
+                </p>
 
-            function navItems() {
+                <h3>Skills & interests</h3>
+                <span class="tag">Robotics</span>
+                <span class="tag">Python</span>
+                <span class="tag">Design</span>
 
-                return [
-                    "Overview",
-                    "My Certificates",
-                    "Achievements",
-                    "Projects",
-                    "My Portfolio",
-                    "Profile Settings"
-                ];
-            }
+                <div class="prev-card">
+                    <strong>Regional Science Fair</strong>
+                    <p class="muted">First place · Science · May 2025</p>
+                </div>
 
-            function app() {
+                <div class="prev-card">
+                    <strong>Community Garden Planner</strong>
+                    <p class="muted">Project · Research & web design</p>
+                </div>
+            </div>
+        </section>
 
-                $("#root").innerHTML = `
+        <section class="features">
+            <div class="section-title">
+                <h2>Make your hard work visible.</h2>
+                <p>One thoughtful home for every part of your journey.</p>
+            </div>
 
-                    ${topbar()}
+            <div class="grid">
+                <article class="feature"><span class="icon">▤</span><h3>Keep certificates organized</h3><p>Store important details and proof together.</p></article>
+                <article class="feature"><span class="icon">✧</span><h3>Celebrate achievements</h3><p>Capture milestones, awards and experiences.</p></article>
+                <article class="feature"><span class="icon">◈</span><h3>Show your work</h3><p>Describe projects and the skills behind them.</p></article>
+                <article class="feature"><span class="icon">↗</span><h3>Make it yours</h3><p>Personalize your Pathfolio experience.</p></article>
+            </div>
+        </section>
+    </main>
 
-                    <div class="shell">
+    <footer class="footer shell">© ${new Date().getFullYear()} Pathfolio · Your achievements. Your future.</footer>`;
+    renderTopnav();
+}
 
-                        <nav class="mobile-nav">
+/* ── About page and chatbot ── */
 
-                            ${navItems().map(name => `
-                                <button
-                                    class="${
-                                        tab === name
-                                            ? "active"
-                                            : ""
-                                    }"
-                                    data-tab="${esc(name)}"
-                                >
-                                    ${esc(name)}
-                                </button>
-                            `).join("")}
+function aboutPage(){
+    $("#root").innerHTML=`
+    ${topbar()}
 
-                        </nav>
+    <main class="shell">
+        <section class="about-hero animate-in">
+            <span class="eyebrow"><i class="dot"></i>Discover Pathfolio</span>
 
-                        <div class="app-layout">
+            <h1>
+                Built for the story
+                <span class="gradient">behind your achievements.</span>
+            </h1>
 
-                            <aside class="side">
+            <p class="lead" style="margin:auto">
+                Pathfolio brings your certificates, projects, skills and
+                milestones together—then lets you make the experience your own.
+            </p>
+        </section>
 
-                                <div class="group">
-                                    Workspace
-                                </div>
+        <section class="bot-wrap">
+            <div class="bot-header">
+                <div class="bot-orb">✦</div>
+                <div>
+                    <strong>Pathfolio Assistant</strong>
+                    <small>Here to answer questions about Pathfolio</small>
+                </div>
+                <span class="pill" style="margin-left:auto">ONLINE</span>
+            </div>
 
-                                ${navItems().map(name => `
-                                    <button
-                                        class="${
-                                            tab === name
-                                                ? "active"
-                                                : ""
-                                        }"
-                                        data-tab="${esc(name)}"
-                                    >
-                                        ${esc(name)}
-                                    </button>
-                                `).join("")}
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">
+                    Hi! I'm the Pathfolio Assistant. Ask me anything about
+                    Pathfolio—what it does, certificates, projects,
+                    personalization, or how to get started.
+                </div>
+            </div>
 
-                                <div class="group">
-                                    Pathfolio
-                                </div>
+            <form class="chat-input" id="chat-form">
+                <input id="chat-input" autocomplete="off"
+                    placeholder="Ask our bot anything about Pathfolio...">
+                <button class="btn primary" type="submit">Ask →</button>
+            </form>
+        </section>
 
-                                <button data-action="about">
-                                    About This Project
-                                </button>
+        <section class="about-showcase">
+            <div class="section-title">
+                <h2>One place. Your whole journey.</h2>
+                <p>Explore some of the ideas that make Pathfolio different.</p>
+            </div>
 
-                                <button data-action="home">
-                                    Visit homepage
-                                </button>
+            <div class="showcase-grid">
 
-                                <button data-action="signout">
-                                    Sign out
-                                </button>
+                <article class="card feature-preview">
+                    <span class="pill">MAKE IT YOURS</span>
+                    <h3>Personalization that feels personal.</h3>
+                    <p>
+                        Change your profile picture, interface color and
+                        background to create a workspace that feels like yours.
+                    </p>
 
-                            </aside>
-
-                            <main
-                                class="main animate-in"
-                                id="view"
-                            ></main>
-
+                    <div class="mini-app">
+                        <div class="mini-side">
+                            <div class="mini-tab">Overview</div>
+                            <div class="mini-tab">Certificates</div>
+                            <div class="mini-tab personalize">✦ Personalize</div>
+                            <div class="mini-tab">Profile</div>
                         </div>
 
-                    </div>
-                `;
-
-                renderTopnav();
-                renderView();
-            }
-
-            /* ─────────────────────────────────────
-               RENDER DASHBOARD VIEWS
-            ───────────────────────────────────── */
-
-            function renderView() {
-
-                const view = $("#view");
-
-                if (!view) return;
-
-                document.querySelectorAll("[data-tab]")
-                    .forEach(button => {
-
-                        button.classList.toggle(
-                            "active",
-                            button.dataset.tab === tab
-                        );
-                    });
-
-                if (tab === "Overview") {
-                    return overview(view);
-                }
-
-                if (tab === "Profile Settings") {
-                    return profileView(view);
-                }
-
-                if (tab === "My Portfolio") {
-                    return portfolioSettings(view);
-                }
-
-                const type =
-                    tab === "My Certificates"
-                        ? "certificates"
-                        : tab === "Achievements"
-                            ? "achievements"
-                            : "projects";
-
-                collection(view, type);
-            }
-
-            /* ─────────────────────────────────────
-               OVERVIEW
-            ───────────────────────────────────── */
-
-            function overview(view) {
-
-                const count = {
-                    certificates: records.certificates.length,
-                    achievements: records.achievements.length,
-                    projects: records.projects.length
-                };
-
-                const total =
-                    count.certificates +
-                    count.achievements +
-                    count.projects;
-
-                const completeness = [
-                    profile.full_name,
-                    profile.bio,
-                    profile.school_name,
-                    total > 0
-                ].filter(Boolean).length * 25;
-
-                view.innerHTML = `
-
-                    <div class="welcome">
-
-                        <div>
-
-                            <h1>
-                                Welcome,
-                                ${
-                                    esc(
-                                        profile.full_name
-                                            .split(/\s+/)[0]
-                                        || "there"
-                                    )
-                                }.
-                            </h1>
-
-                            <span class="muted">
-                                Your next opportunity starts with
-                                what you've done.
-                            </span>
-
-                        </div>
-
-                        <button
-                            class="btn primary"
-                            data-action="new-certificate"
-                        >
-                            ＋ Add certificate
-                        </button>
-
-                    </div>
-
-                    <div class="stat-grid">
-
-                        <div class="card stat">
-                            <span>Certificates</span>
-                            <strong>
-                                ${count.certificates}
-                            </strong>
-                        </div>
-
-                        <div class="card stat">
-                            <span>Achievements</span>
-                            <strong>
-                                ${count.achievements}
-                            </strong>
-                        </div>
-
-                        <div class="card stat">
-                            <span>Projects</span>
-                            <strong>
-                                ${count.projects}
-                            </strong>
-                        </div>
-
-                    </div>
-
-                    <section class="card">
-
-                        <div
-                            class="section-head"
-                            style="margin:0 0 10px"
-                        >
-
-                            <h2>
-                                Profile completion
-                            </h2>
-
-                            <span class="muted">
-                                ${completeness}%
-                            </span>
-
-                        </div>
-
-                        <div class="progress">
-                            <i
-                                style="width:${completeness}%"
-                            ></i>
-                        </div>
-
-                    </section>
-
-                    <div class="section-head">
-
-                        <h2>
-                            Recently added
-                        </h2>
-
-                        <button
-                            class="btn small"
-                            data-tab="My Certificates"
-                        >
-                            View all
-                        </button>
-
-                    </div>
-
-                    ${
-                        total
-                            ? `
-                                <div class="list">
-                                    ${
-                                        [
-                                            ...records.certificates,
-                                            ...records.achievements,
-                                            ...records.projects
-                                        ]
-                                        .sort(
-                                            (a, b) =>
-                                                new Date(b.created_at)
-                                                -
-                                                new Date(a.created_at)
-                                        )
-                                        .slice(0, 4)
-                                        .map(itemCard)
-                                        .join("")
-                                    }
-                                </div>
-                            `
-                            : `
-                                <div class="empty">
-
-                                    <b>
-                                        Your story starts here.
-                                    </b>
-
-                                    Add a certificate, achievement,
-                                    or project to build your portfolio.
-
-                                </div>
-                            `
-                    }
-                `;
-            }
-
-            /* ─────────────────────────────────────
-               ITEM CARD
-            ───────────────────────────────────── */
-
-            function itemCard(item) {
-
-                const type = item._type || "certificate";
-
-                return `
-
-                    <article class="card item">
-
-                        <span class="pill">
-                            ${esc(type)}
-                        </span>
-
-                        <h3 style="margin-top:10px">
-                            ${esc(item.title || "Untitled")}
-                        </h3>
-
-                        <p>
-                            ${
-                                esc(
-                                    item.issuer ||
-                                    item.organization ||
-                                    item.category ||
-                                    ""
-                                )
-                            }
-                        </p>
-
-                        <p>
-                            ${esc(item.description || "")}
-                        </p>
-
-                        ${
-                            item.photo
-                                ? `
-                                    <img
-                                        src="${item.photo}"
-                                        style="
-                                            width:100%;
-                                            max-height:130px;
-                                            object-fit:cover;
-                                            border-radius:10px;
-                                            margin-top:10px;
-                                            border:1px solid #ffffff12;
-                                        "
-                                        alt="Certificate verification"
-                                    >
-                                `
-                                : ""
-                        }
-
-                        <div class="item-actions">
-
-                            <button
-                                class="btn small"
-                                data-edit="${esc(type)}"
-                                data-id="${esc(item.id)}"
-                            >
-                                Edit
-                            </button>
-
-                            <button
-                                class="btn small"
-                                data-delete="${esc(type)}"
-                                data-id="${esc(item.id)}"
-                            >
-                                Delete
-                            </button>
-
-                        </div>
-
-                    </article>
-                `;
-            }
-
-            /* ─────────────────────────────────────
-               ITEM CONFIGURATION
-            ───────────────────────────────────── */
-
-            const configFor = type => ({
-
-                certificates: {
-
-                    title: "Certificate",
-
-                    fields: [
-
-                        [
-                            "title",
-                            "Certificate title",
-                            "text",
-                            true
-                        ],
-
-                        [
-                            "issuer",
-                            "Issuing organization",
-                            "text",
-                            true
-                        ],
-
-                        [
-                            "issue_date",
-                            "Issue date",
-                            "date"
-                        ],
-
-                        [
-                            "category",
-                            "Certificate category",
-                            "select"
-                        ],
-
-                        [
-                            "description",
-                            "What was this certificate for?",
-                            "textarea"
-                        ],
-
-                        [
-                            "is_public",
-                            "Show on public portfolio",
-                            "checkbox"
-                        ]
-
-                    ]
-                },
-
-                achievements: {
-
-                    title: "Achievement",
-
-                    fields: [
-
-                        [
-                            "title",
-                            "Title",
-                            "text",
-                            true
-                        ],
-
-                        [
-                            "description",
-                            "Description",
-                            "textarea"
-                        ],
-
-                        [
-                            "achievement_date",
-                            "Date",
-                            "date"
-                        ],
-
-                        [
-                            "category",
-                            "Category",
-                            "select"
-                        ],
-
-                        [
-                            "organization",
-                            "Organization",
-                            "text"
-                        ],
-
-                        [
-                            "is_public",
-                            "Show on public portfolio",
-                            "checkbox"
-                        ]
-
-                    ]
-                },
-
-                projects: {
-
-                    title: "Project",
-
-                    fields: [
-
-                        [
-                            "title",
-                            "Project name",
-                            "text",
-                            true
-                        ],
-
-                        [
-                            "description",
-                            "Description",
-                            "textarea"
-                        ],
-
-                        [
-                            "technologies",
-                            "Technologies (comma separated)",
-                            "text"
-                        ],
-
-                        [
-                            "project_url",
-                            "Project URL",
-                            "url"
-                        ],
-
-                        [
-                            "is_public",
-                            "Show on public portfolio",
-                            "checkbox"
-                        ]
-
-                    ]
-                }
-
-            })[type];
-
-            /* ─────────────────────────────────────
-               COLLECTION PAGE
-            ───────────────────────────────────── */
-
-            function collection(view, type) {
-
-                const config = configFor(type);
-                const items = records[type] || [];
-
-                const title =
-                    type === "certificates"
-                        ? "My Certificates"
-                        : type === "achievements"
-                            ? "Achievements"
-                            : "Projects";
-
-                view.innerHTML = `
-
-                    <div class="welcome">
-
-                        <div>
-
-                            <h1>
-                                ${title}
-                            </h1>
-
-                            <span class="muted">
-                                Manage your ${type} and choose
-                                what appears publicly.
-                            </span>
-
-                        </div>
-
-                        <button
-                            class="btn primary"
-                            data-new="${type}"
-                        >
-                            ＋ Add
-                            ${config.title.toLowerCase()}
-                        </button>
-
-                    </div>
-
-                    <div class="field">
-
-                        <label for="search">
-                            Search
-                        </label>
-
-                        <input
-                            id="search"
-                            placeholder="Search your records"
-                            autocomplete="off"
-                        >
-
-                    </div>
-
-                    <div
-                        class="list"
-                        id="items"
-                        style="margin-top:14px"
-                    >
-
-                        ${
-                            items.length
-                                ? items.map(itemCard).join("")
-                                : `
-                                    <div
-                                        class="empty"
-                                        style="grid-column:1/-1"
-                                    >
-
-                                        <b>
-                                            No ${type} yet.
-                                        </b>
-
-                                        Add your first
-                                        ${config.title.toLowerCase()}
-                                        and start building your story.
-
-                                    </div>
-                                `
-                        }
-
-                    </div>
-                `;
-
-                $("#search")?.addEventListener(
-                    "input",
-                    event => {
-
-                        const query =
-                            event.target.value.toLowerCase();
-
-                        $("#items").innerHTML =
-                            items
-                                .filter(item =>
-                                    JSON.stringify(item)
-                                        .toLowerCase()
-                                        .includes(query)
-                                )
-                                .map(itemCard)
-                                .join("")
-                            ||
-                            `
-                                <div
-                                    class="empty"
-                                    style="grid-column:1/-1"
-                                >
-                                    No matching records.
-                                </div>
-                            `;
-                    }
-                );
-            }
-
-            /* ─────────────────────────────────────
-               PROFILE SETTINGS
-            ───────────────────────────────────── */
-
-            function profileView(view) {
-
-                const p = profile;
-
-                view.innerHTML = `
-
-                    <div class="welcome">
-
-                        <div>
-
-                            <h1>
-                                Profile settings
-                            </h1>
-
-                            <span class="muted">
-                                Build the profile behind your portfolio.
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                    <form
-                        id="profile-form"
-                        class="card"
-                    >
-
-                        <div class="form-grid">
-
-                            ${[
-                                ["full_name", "Full name", "text"],
-                                ["grade", "Grade / class", "text"],
-                                ["section", "Section", "text"],
-                                ["school_name", "School name", "text"],
-                                [
-                                    "username",
-                                    "Portfolio username",
-                                    "text"
-                                ]
-                            ].map(([key, label, type]) => `
-
-                                <div class="field">
-
-                                    <label for="p-${key}">
-                                        ${label}
-                                    </label>
-
-                                    <input
-                                        id="p-${key}"
-                                        value="${esc(p[key] || "")}"
-                                        type="${type}"
-                                        ${
-                                            key === "username"
-                                                ? 'pattern="[a-zA-Z0-9-]{3,30}"'
-                                                : ""
-                                        }
-                                        maxlength="100"
-                                    >
-
-                                </div>
-
-                            `).join("")}
-
-                            <div class="field full">
-
-                                <label for="p-bio">
-                                    Short biography
-                                </label>
-
-                                <textarea
-                                    id="p-bio"
-                                    maxlength="500"
-                                >${esc(p.bio || "")}</textarea>
-
+                        <div class="mini-content">
+                            <strong style="font-size:13px">App personalization</strong>
+                            <div class="mini-profile">
+                                <div class="mini-avatar"></div>
+                                <div class="mini-lines"><i></i><i style="width:45%"></i></div>
                             </div>
-
-                            <div class="field">
-
-                                <label for="p-skills">
-                                    Skills (comma separated)
-                                </label>
-
-                                <input
-                                    id="p-skills"
-                                    value="${esc(
-                                        (p.skills || []).join(", ")
-                                    )}"
-                                >
-
+                            <div class="color-dots">
+                                <span class="color-dot one"></span>
+                                <span class="color-dot two"></span>
+                                <span class="color-dot three"></span>
+                                <span class="color-dot four"></span>
                             </div>
-
-                            <div class="field">
-
-                                <label for="p-interests">
-                                    Interests (comma separated)
-                                </label>
-
-                                <input
-                                    id="p-interests"
-                                    value="${esc(
-                                        (p.interests || []).join(", ")
-                                    )}"
-                                >
-
-                            </div>
-
                         </div>
-
-                        <div
-                            class="actions"
-                            style="margin-top:20px"
-                        >
-
-                            <button
-                                class="btn primary"
-                                type="submit"
-                            >
-                                Save profile
-                            </button>
-
-                        </div>
-
-                    </form>
-                `;
-            }
-
-            /* ─────────────────────────────────────
-               PORTFOLIO SETTINGS
-            ───────────────────────────────────── */
-
-            function portfolioSettings(view) {
-
-                view.innerHTML = `
-
-                    <div class="welcome">
-
-                        <div>
-
-                            <h1>
-                                My Portfolio
-                            </h1>
-
-                            <span class="muted">
-                                Control your public presence.
-                            </span>
-
-                        </div>
-
                     </div>
+                </article>
 
-                    <div class="card">
+                <article class="card feature-preview">
+                    <span class="pill">KEEP YOUR PROOF</span>
+                    <h3>Achievements deserve a home.</h3>
+                    <p>
+                        Add certificates with verification photos, record your
+                        milestones and build a clearer picture of your progress.
+                    </p>
 
-                        <div
-                            class="section-head"
-                            style="margin-top:0"
-                        >
-
-                            <h2>
-                                Publishing status
-                            </h2>
-
-                        </div>
-
-                        <p>
-                            Your portfolio is currently
-                            <strong>
-                                ${
-                                    profile.portfolio_published
-                                        ? "Published"
-                                        : "Private"
-                                }
-                            </strong>.
-                        </p>
-
-                        <p
-                            class="muted"
-                            style="font-size:13px"
-                        >
-                            Only items you mark as public will be
-                            included when your portfolio is published.
-                        </p>
-
-                        <div class="actions">
-
-                            <button
-                                class="btn ${
-                                    profile.portfolio_published
-                                        ? ""
-                                        : "primary"
-                                }"
-                                data-action="toggle-publish"
-                            >
-                                ${
-                                    profile.portfolio_published
-                                        ? "Unpublish portfolio"
-                                        : "Publish portfolio"
-                                }
-                            </button>
-
-                        </div>
-
+                    <div class="mini-certificate">
+                        <div class="certificate-mark">✦</div>
+                        <h3 style="font-size:16px;margin:15px 0 5px">Regional Science Fair</h3>
+                        <p class="muted" style="font-size:12px">Certificate · Science · 2026</p>
+                        <div class="progress" style="margin-top:16px"><i style="width:78%"></i></div>
                     </div>
-                `;
-            }
+                </article>
 
-            /* ─────────────────────────────────────
-               ADD / EDIT ITEM MODAL
-            ───────────────────────────────────── */
-
-            function itemModal(type, id) {
-
-                const config = configFor(type);
-
-                const isEdit = Boolean(id);
-
-                const item = isEdit
-                    ? records[type].find(record =>
-                        record.id === id
-                    ) || {}
-                    : {};
-
-                const fieldsHtml =
-                    config.fields.map(
-                        ([key, label, type, required]) => {
-
-                            if (type === "checkbox") {
-
-                                return `
-                                    <div
-                                        class="field"
-                                        style="
-                                            flex-direction:row;
-                                            align-items:center;
-                                            gap:10px;
-                                            margin-top:10px
-                                        "
-                                    >
-
-                                        <input
-                                            type="checkbox"
-                                            id="f-${key}"
-                                            ${
-                                                item[key]
-                                                    ? "checked"
-                                                    : ""
-                                            }
-                                        >
-
-                                        <label
-                                            for="f-${key}"
-                                            style="margin:0"
-                                        >
-                                            ${label}
-                                        </label>
-
-                                    </div>
-                                `;
-                            }
-
-                            if (type === "select") {
-
-                                return `
-                                    <div class="field">
-
-                                        <label for="f-${key}">
-                                            ${label}
-                                        </label>
-
-                                        <select id="f-${key}">
-
-                                            ${categories.map(category => `
-
-                                                <option
-                                                    value="${category}"
-                                                    ${
-                                                        item[key] === category
-                                                            ? "selected"
-                                                            : ""
-                                                    }
-                                                >
-                                                    ${category}
-                                                </option>
-
-                                            `).join("")}
-
-                                        </select>
-
-                                    </div>
-                                `;
-                            }
-
-                            if (type === "textarea") {
-
-                                return `
-                                    <div class="field full">
-
-                                        <label for="f-${key}">
-                                            ${label}
-                                        </label>
-
-                                        <textarea
-                                            id="f-${key}"
-                                            ${
-                                                required
-                                                    ? "required"
-                                                    : ""
-                                            }
-                                        >${esc(item[key] || "")}</textarea>
-
-                                    </div>
-                                `;
-                            }
-
-                            return `
-                                <div class="field">
-
-                                    <label for="f-${key}">
-                                        ${label}
-                                    </label>
-
-                                    <input
-                                        type="${type}"
-                                        id="f-${key}"
-                                        value="${esc(item[key] || "")}"
-                                        ${
-                                            required
-                                                ? "required"
-                                                : ""
-                                        }
-                                    >
-
-                                </div>
-                            `;
-                        }
-                    ).join("");
-
-                const photoSection =
-                    type === "certificates"
-                        ? `
-
-                            <div class="field full">
-
-                                <label>
-                                    Certificate verification photo
-                                </label>
-
-                                <label
-                                    class="upload-box"
-                                    for="certificate-photo"
-                                >
-
-                                    <strong>
-                                        Add a photo to verify
-                                    </strong>
-
-                                    Upload a photo or screenshot of
-                                    your certificate.
-
-                                    <input
-                                        id="certificate-photo"
-                                        type="file"
-                                        accept="image/*"
-                                    >
-
-                                </label>
-
-                                <img
-                                    id="photo-preview"
-                                    class="photo-preview"
-                                    ${
-                                        item.photo
-                                            ? `
-                                                src="${item.photo}"
-                                                style="display:block"
-                                            `
-                                            : ""
-                                    }
-                                    alt="Certificate preview"
-                                >
-
-                            </div>
-
-                        `
-                        : "";
-
-                return `
-
-                    <div
-                        class="modal-back"
-                        id="modal"
-                    >
-
-                        <section
-                            class="modal"
-                            role="dialog"
-                            aria-modal="true"
-                        >
-
-                            <div class="modal-head">
-
-                                <h2>
-                                    ${
-                                        isEdit
-                                            ? "Edit"
-                                            : "Add"
-                                    }
-                                    ${config.title.toLowerCase()}
-                                </h2>
-
-                                <button
-                                    class="close"
-                                    data-action="close"
-                                >
-                                    ×
-                                </button>
-
-                            </div>
-
-                            <form
-                                id="item-form"
-                                data-type="${type}"
-                                data-id="${id || ""}"
-                            >
-
-                                <div class="form-grid">
-
-                                    ${fieldsHtml}
-
-                                    ${photoSection}
-
-                                </div>
-
-                                <div
-                                    class="actions"
-                                    style="margin-top:24px"
-                                >
-
-                                    <button
-                                        class="btn primary"
-                                        type="submit"
-                                    >
-                                        Save
-                                    </button>
-
-                                    <button
-                                        class="btn"
-                                        type="button"
-                                        data-action="close"
-                                    >
-                                        Cancel
-                                    </button>
-
-                                </div>
-
-                            </form>
-
-                        </section>
-
+                <article class="card feature-preview">
+                    <span class="pill">YOUR WORK</span>
+                    <h3>Projects tell a bigger story.</h3>
+                    <p>
+                        Go beyond listing achievements. Show what you created,
+                        which skills you used and what you learned.
+                    </p>
+                    <div class="prev-card" style="margin-top:30px">
+                        <strong>Community Garden Planner</strong>
+                        <p class="muted">Research · Design · Web development</p>
+                        <span class="tag">Problem solving</span>
+                        <span class="tag">Design</span>
                     </div>
-                `;
+                </article>
+
+                <article class="card feature-preview">
+                    <span class="pill">THE BIGGER PICTURE</span>
+                    <h3>Your journey is more than a checklist.</h3>
+                    <p>
+                        Pathfolio is designed to help students collect the
+                        things they're proud of and turn scattered experiences
+                        into a story they can understand and share.
+                    </p>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer shell">© ${new Date().getFullYear()} Pathfolio · Your achievements. Your future.</footer>`;
+
+    renderTopnav();
+    setupChatbot();
+}
+
+function setupChatbot(){
+    $("#chat-form")?.addEventListener("submit",event=>{
+        event.preventDefault();
+        const input=$("#chat-input");
+        const question=input.value.trim();
+        if(!question)return;
+
+        addMessage(question,"user");
+        input.value="";
+
+        setTimeout(()=>addMessage(getBotAnswer(question),"bot"),350);
+    });
+}
+
+function addMessage(text,type){
+    const messages=$("#chat-messages");
+    if(!messages)return;
+
+    const message=document.createElement("div");
+    message.className=`message ${type}`;
+    message.textContent=text;
+    messages.append(message);
+    messages.scrollTop=messages.scrollHeight;
+}
+
+function getBotAnswer(question){
+    const q=question.toLowerCase();
+
+    if(q.includes("what is pathfolio") || q.includes("what does pathfolio do")){
+        return "Pathfolio is a personal portfolio app designed to help you organize certificates, achievements and projects in one place. The goal is to make your progress easier to understand, celebrate and eventually share.";
+    }
+
+    if(q.includes("certificate")){
+        return "You can add certificates with details such as the title, organization, category and date. Pathfolio also lets you attach a photo or screenshot as verification.";
+    }
+
+    if(q.includes("personal") || q.includes("color") || q.includes("custom")){
+        return "Pathfolio includes an App Personalization area where you can change your profile picture, interface accent color and background color. You can always return to the classic black-and-blue look too.";
+    }
+
+    if(q.includes("project")){
+        return "The Projects section lets you record things you have created, describe them, list technologies or skills used and add a project link when you have one.";
+    }
+
+    if(q.includes("achievement") || q.includes("award")){
+        return "Achievements can include awards, competitions, leadership experiences, volunteering and other milestones that are important to your story.";
+    }
+
+    if(q.includes("portfolio") || q.includes("public") || q.includes("share")){
+        return "Your portfolio can be kept private while you build it. You can choose which items are public and later publish your portfolio when you're ready.";
+    }
+
+    if(q.includes("save") || q.includes("remember") || q.includes("sign in")){
+        return "This version of Pathfolio uses your browser's local storage to remember your profile, settings and records on the same device. A future online version could use a secure database so accounts work across devices.";
+    }
+
+    if(q.includes("hello") || q.includes("hi ") || q==="hi"){
+        return "Hello! I'm glad you're exploring Pathfolio. You can ask me about certificates, projects, achievements, personalization or the purpose of the app.";
+    }
+
+    return "That's a good question! I'm currently the Pathfolio Assistant, so I know best about how Pathfolio works. Try asking me about certificates, achievements, projects, personalization, portfolios or getting started.";
+}
+
+/* ── Authentication ── */
+
+function authModal(mode){
+    const signup=mode==="signup";
+
+    document.body.insertAdjacentHTML("beforeend",`
+    <div class="modal-back" id="modal">
+        <section class="modal">
+            <div class="modal-head">
+                <h2>${signup?"Create your account":"Welcome back"}</h2>
+                <button class="close" data-action="close">×</button>
+            </div>
+
+            <p class="muted">
+                ${signup
+                    ?"Start collecting your milestones."
+                    :"Sign in to continue building your portfolio."}
+            </p>
+
+            <form id="auth-form">
+                ${signup?`
+                <div class="field">
+                    <label for="name">Full name</label>
+                    <input id="name" required maxlength="100">
+                </div>`:""}
+
+                <div class="field" style="margin-top:12px">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" required>
+                </div>
+
+                <div class="field" style="margin-top:12px">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" required minlength="8">
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" type="submit">
+                        ${signup?"Create account":"Sign in"}
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>`);
+}
+
+/* ── App ── */
+
+function navItems(){
+    return [
+        "Overview",
+        "My Certificates",
+        "Achievements",
+        "Projects",
+        "My Portfolio",
+        "Profile Settings",
+        "App Personalization"
+    ];
+}
+
+function app(){
+    $("#root").innerHTML=`
+    ${topbar()}
+
+    <div class="shell">
+        <nav class="mobile-nav">
+            ${navItems().map(name=>`
+                <button class="${tab===name?"active":""}"
+                    data-tab="${esc(name)}">${esc(name)}</button>
+            `).join("")}
+        </nav>
+
+        <div class="app-layout">
+            <aside class="side">
+                <div class="group">Workspace</div>
+                ${navItems().map(name=>`
+                    <button class="${tab===name?"active":""}"
+                        data-tab="${esc(name)}">${esc(name)}</button>
+                `).join("")}
+
+                <div class="group">Pathfolio</div>
+                <button data-action="about">About This Project</button>
+                <button data-action="home">Visit homepage</button>
+                <button data-action="signout">Sign out</button>
+            </aside>
+
+            <main class="main animate-in" id="view"></main>
+        </div>
+    </div>`;
+
+    renderTopnav();
+    renderView();
+}
+
+function renderView(){
+    const view=$("#view");
+    if(!view)return;
+
+    document.querySelectorAll("[data-tab]").forEach(button=>{
+        button.classList.toggle("active",button.dataset.tab===tab);
+    });
+
+    if(tab==="Overview")return overview(view);
+    if(tab==="Profile Settings")return profileView(view);
+    if(tab==="App Personalization")return personalizationView(view);
+    if(tab==="My Portfolio")return portfolioView(view);
+
+    const type=tab==="My Certificates"?"certificates":
+        tab==="Achievements"?"achievements":"projects";
+
+    collectionView(view,type);
+}
+
+/* ── Overview ── */
+
+function overview(view){
+    const total=records.certificates.length+
+        records.achievements.length+records.projects.length;
+
+    const completeness=[
+        profile.full_name,profile.bio,profile.school_name,total>0
+    ].filter(Boolean).length*25;
+
+    view.innerHTML=`
+    <div class="welcome">
+        <div>
+            <h1>Welcome, ${esc(profile.full_name.split(/\s+/)[0]||"there")}.</h1>
+            <span class="muted">Your next opportunity starts with what you've done.</span>
+        </div>
+        <button class="btn primary" data-action="new-certificate">＋ Add certificate</button>
+    </div>
+
+    <div class="stat-grid">
+        <div class="card stat"><span>Certificates</span><strong>${records.certificates.length}</strong></div>
+        <div class="card stat"><span>Achievements</span><strong>${records.achievements.length}</strong></div>
+        <div class="card stat"><span>Projects</span><strong>${records.projects.length}</strong></div>
+    </div>
+
+    <section class="card">
+        <div class="section-head" style="margin:0 0 10px">
+            <h2>Profile completion</h2>
+            <span class="muted">${completeness}%</span>
+        </div>
+        <div class="progress"><i style="width:${completeness}%"></i></div>
+    </section>
+
+    <div class="section-head"><h2>Recently added</h2></div>
+
+    ${total?`
+        <div class="list">
+            ${[...records.certificates,...records.achievements,...records.projects]
+                .sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
+                .slice(0,4).map(itemCard).join("")}
+        </div>
+    `:`
+        <div class="empty"><b>Your story starts here.</b>
+        Add a certificate, achievement or project to begin building your portfolio.</div>
+    `}`;
+}
+
+/* ── Item system ── */
+
+function itemCard(item){
+    const type=item._type;
+
+    return `<article class="card">
+        <span class="pill">${esc(type)}</span>
+        <h3 style="margin:12px 0 5px">${esc(item.title||"Untitled")}</h3>
+        <p class="muted">${esc(item.description||item.issuer||"")}</p>
+        ${item.photo?`<img src="${item.photo}" style="width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-top:10px" alt="Verification">`:""}
+        <div class="actions">
+            <button class="btn small" data-edit="${type}" data-id="${item.id}">Edit</button>
+            <button class="btn small" data-delete="${type}" data-id="${item.id}">Delete</button>
+        </div>
+    </article>`;
+}
+
+const configFor=type=>({
+    certificates:{
+        title:"Certificate",
+        fields:[
+            ["title","Certificate title","text",true],
+            ["issuer","Issuing organization","text",true],
+            ["issue_date","Issue date","date"],
+            ["category","Category","select"],
+            ["description","What was this certificate for?","textarea"]
+        ]
+    },
+    achievements:{
+        title:"Achievement",
+        fields:[
+            ["title","Title","text",true],
+            ["description","Description","textarea"],
+            ["achievement_date","Date","date"],
+            ["category","Category","select"],
+            ["organization","Organization","text"]
+        ]
+    },
+    projects:{
+        title:"Project",
+        fields:[
+            ["title","Project name","text",true],
+            ["description","Description","textarea"],
+            ["technologies","Technologies / skills","text"],
+            ["project_url","Project URL","url"]
+        ]
+    }
+})[type];
+
+function collectionView(view,type){
+    const config=configFor(type);
+    const title=type==="certificates"?"My Certificates":
+        type==="achievements"?"Achievements":"Projects";
+
+    view.innerHTML=`
+    <div class="welcome">
+        <div>
+            <h1>${title}</h1>
+            <span class="muted">Build a clearer record of your journey.</span>
+        </div>
+        <button class="btn primary" data-new="${type}">
+            ＋ Add ${config.title.toLowerCase()}
+        </button>
+    </div>
+
+    <div class="list">
+        ${records[type].length
+            ?records[type].map(itemCard).join("")
+            :`<div class="empty" style="grid-column:1/-1">
+                <b>No ${type} yet.</b>
+                Add your first ${config.title.toLowerCase()} to get started.
+            </div>`}
+    </div>`;
+}
+
+/* ── Profile ── */
+
+function profileView(view){
+    view.innerHTML=`
+    <div class="welcome">
+        <div>
+            <h1>Profile settings</h1>
+            <span class="muted">Build the profile behind your portfolio.</span>
+        </div>
+    </div>
+
+    <form id="profile-form" class="card">
+        <div class="form-grid">
+            ${[
+                ["full_name","Full name"],
+                ["grade","Grade / class"],
+                ["school_name","School name"],
+                ["username","Portfolio username"]
+            ].map(([key,label])=>`
+                <div class="field">
+                    <label>${label}</label>
+                    <input id="p-${key}" value="${esc(profile[key]||"")}">
+                </div>`).join("")}
+
+            <div class="field full">
+                <label>Short biography</label>
+                <textarea id="p-bio">${esc(profile.bio||"")}</textarea>
+            </div>
+
+            <div class="field">
+                <label>Skills (comma separated)</label>
+                <input id="p-skills" value="${esc(profile.skills.join(", "))}">
+            </div>
+
+            <div class="field">
+                <label>Interests (comma separated)</label>
+                <input id="p-interests" value="${esc(profile.interests.join(", "))}">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn primary" type="submit">Save profile</button>
+        </div>
+    </form>`;
+}
+
+/* ── Personalization ── */
+
+function personalizationView(view){
+    view.innerHTML=`
+    <div class="welcome">
+        <div>
+            <h1>App Personalization</h1>
+            <span class="muted">Make Pathfolio feel like your own space.</span>
+        </div>
+    </div>
+
+    <form id="personalization-form" class="card">
+        <div class="form-grid">
+
+            <div class="field full">
+                <label>Your profile picture</label>
+                <label class="upload-box">
+                    <strong>Choose a profile picture</strong>
+                    Upload an image for your Pathfolio profile.
+                    <input id="profile-photo-input" type="file" accept="image/*">
+                </label>
+
+                ${profile.photo
+                    ?`<img id="profile-photo-preview" src="${profile.photo}" class="photo-preview" style="display:block" alt="Profile">`
+                    :`<img id="profile-photo-preview" class="photo-preview" alt="Profile">`}
+            </div>
+
+            <div class="field">
+                <label>Interface accent color</label>
+                <input id="accent-color" type="color" value="${settings.accent}">
+            </div>
+
+            <div class="field">
+                <label>App background color</label>
+                <input id="background-color" type="color" value="${settings.background}">
+            </div>
+
+            <div class="field full">
+                <label>Quick themes</label>
+                <div class="actions">
+                    <button type="button" class="btn spaceship-hover" data-theme="classic">Classic Black & Blue</button>
+                    <button type="button" class="btn" data-theme="purple">Midnight Purple</button>
+                    <button type="button" class="btn" data-theme="emerald">Deep Emerald</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn primary" type="submit">Save personalization</button>
+        </div>
+    </form>`;
+}
+
+/* ── Portfolio ── */
+
+function portfolioView(view){
+    view.innerHTML=`
+    <div class="welcome">
+        <div>
+            <h1>My Portfolio</h1>
+            <span class="muted">Control your public presence.</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0">Publishing status</h2>
+        <p>Your portfolio is currently <strong>${profile.portfolio_published?"Published":"Private"}</strong>.</p>
+        <p class="muted">Only items you choose to share should eventually appear publicly.</p>
+        <div class="actions">
+            <button class="btn ${profile.portfolio_published?"":"primary"}" data-action="toggle-publish">
+                ${profile.portfolio_published?"Unpublish portfolio":"Publish portfolio"}
+            </button>
+        </div>
+    </div>`;
+}
+
+/* ── Item modal ── */
+
+function itemModal(type,id){
+    const config=configFor(type);
+    const item=id?records[type].find(x=>x.id===id)||{}:{};
+
+    const fields=config.fields.map(([key,label,fieldType,required])=>{
+        if(fieldType==="select"){
+            return `<div class="field"><label>${label}</label>
+                <select id="f-${key}">
+                    ${categories.map(c=>`<option ${item[key]===c?"selected":""}>${c}</option>`).join("")}
+                </select></div>`;
+        }
+
+        if(fieldType==="textarea"){
+            return `<div class="field full"><label>${label}</label>
+                <textarea id="f-${key}" ${required?"required":""}>${esc(item[key]||"")}</textarea></div>`;
+        }
+
+        return `<div class="field"><label>${label}</label>
+            <input id="f-${key}" type="${fieldType}" value="${esc(item[key]||"")}" ${required?"required":""}>
+        </div>`;
+    }).join("");
+
+    const photo=type==="certificates"?`
+        <div class="field full">
+            <label>Certificate verification photo</label>
+            <label class="upload-box">
+                <strong>Add a photo to verify</strong>
+                Upload a photo or screenshot of your certificate.
+                <input id="certificate-photo" type="file" accept="image/*">
+            </label>
+            <img id="photo-preview" class="photo-preview"
+                ${item.photo?`src="${item.photo}" style="display:block"`:""} alt="Preview">
+        </div>`:"";
+
+    return `
+    <div class="modal-back" id="modal">
+        <section class="modal">
+            <div class="modal-head">
+                <h2>${id?"Edit":"Add"} ${config.title.toLowerCase()}</h2>
+                <button class="close" data-action="close">×</button>
+            </div>
+
+            <form id="item-form" data-type="${type}" data-id="${id||""}">
+                <div class="form-grid">${fields}${photo}</div>
+                <div class="actions">
+                    <button class="btn primary" type="submit">Save</button>
+                    <button class="btn" type="button" data-action="close">Cancel</button>
+                </div>
+            </form>
+        </section>
+    </div>`;
+}
+
+/* ── Click events ── */
+
+document.addEventListener("click",event=>{
+    const button=event.target.closest("button");
+    if(!button)return;
+
+    if(button.dataset.tab){
+        tab=button.dataset.tab;
+        renderView();
+        return;
+    }
+
+    const action=button.dataset.action;
+
+    if(action==="close")$("#modal")?.remove();
+
+    if(action==="home")landing();
+
+    if(action==="about")aboutPage();
+
+    if(action==="start"){
+        $("#modal")?.remove();
+        authModal("signup");
+    }
+
+    if(action==="signin"){
+        $("#modal")?.remove();
+        authModal("login");
+    }
+
+    if(action==="dashboard"){
+        if(user)app();
+        else authModal("login");
+    }
+
+    if(action==="signout"){
+        user=null;
+        localStorage.removeItem("pathfolio-user");
+        landing();
+        notify("Signed out successfully");
+    }
+
+    if(action==="demo"){
+        user={id:"demo-user",email:"demo@example.com"};
+        profile.full_name="Demo User";
+        profile.email=user.email;
+        tab="Overview";
+        saveData();
+        app();
+        notify("Welcome to the demo!");
+    }
+
+    if(action==="new-certificate"){
+        document.body.insertAdjacentHTML("beforeend",itemModal("certificates"));
+    }
+
+    if(button.dataset.new){
+        document.body.insertAdjacentHTML("beforeend",itemModal(button.dataset.new));
+    }
+
+    if(button.dataset.edit){
+        document.body.insertAdjacentHTML("beforeend",
+            itemModal(button.dataset.edit,button.dataset.id));
+    }
+
+    if(button.dataset.delete){
+        const type=button.dataset.delete;
+        if(confirm("Are you sure you want to delete this item?")){
+            records[type]=records[type].filter(x=>x.id!==button.dataset.id);
+            saveData();
+            renderView();
+            notify("Item deleted");
+        }
+    }
+
+    if(action==="toggle-publish"){
+        profile.portfolio_published=!profile.portfolio_published;
+        saveData();
+        renderView();
+        notify(profile.portfolio_published?"Portfolio published":"Portfolio is now private");
+    }
+
+    if(button.dataset.theme){
+        const themes={
+            classic:{accent:"#4c8dff",background:"#05070b"},
+            purple:{accent:"#9b7bff",background:"#090711"},
+            emerald:{accent:"#42d6a4",background:"#05100d"}
+        };
+
+        settings={...settings,...themes[button.dataset.theme]};
+        applyTheme();
+        saveData();
+
+        if(tab==="App Personalization")personalizationView($("#view"));
+    }
+});
+
+/* ── Image uploads ── */
+
+document.addEventListener("change",event=>{
+    const input=event.target;
+    const file=input.files?.[0];
+    if(!file)return;
+
+    if(input.id==="certificate-photo" || input.id==="profile-photo-input"){
+        const reader=new FileReader();
+
+        reader.onload=e=>{
+            const preview=input.id==="certificate-photo"
+                ?$("#photo-preview")
+                :$("#profile-photo-preview");
+
+            if(preview){
+                preview.src=e.target.result;
+                preview.style.display="block";
             }
-
-            /* ─────────────────────────────────────
-               CLICK EVENTS
-            ───────────────────────────────────── */
-
-            document.addEventListener(
-                "click",
-                event => {
-
-                    const button =
-                        event.target.closest("button");
-
-                    if (!button) return;
-
-                    const action =
-                        button.dataset.action;
-
-                    const tabName =
-                        button.dataset.tab;
-
-                    const newType =
-                        button.dataset.new;
-
-                    const editType =
-                        button.dataset.edit;
-
-                    const deleteType =
-                        button.dataset.delete;
-
-                    if (tabName) {
-
-                        tab = tabName;
-                        renderView();
-
-                        return;
-                    }
-
-                    if (action === "close") {
-
-                        $("#modal")?.remove();
-
-                        return;
-                    }
-
-                    if (action === "home") {
-
-                        landing();
-
-                        return;
-                    }
-
-                    if (action === "about") {
-
-                        aboutPage();
-
-                        return;
-                    }
-
-                    if (action === "save-about") {
-
-                        aboutProject =
-                            $("#about-text").value;
-
-                        notify(
-                            "About This Project saved!"
-                        );
-
-                        return;
-                    }
-
-                    if (action === "start") {
-
-                        $("#modal")?.remove();
-
-                        authModal("signup");
-
-                        return;
-                    }
-
-                    if (action === "signin") {
-
-                        $("#modal")?.remove();
-
-                        authModal("login");
-
-                        return;
-                    }
-
-                    if (action === "dashboard") {
-
-                        if (!user) {
-                            authModal("login");
-                            return;
-                        }
-
-                        app();
-
-                        return;
-                    }
-
-                    if (action === "signout") {
-
-                        user = null;
-
-                        landing();
-
-                        notify("Signed out successfully");
-
-                        return;
-                    }
-
-                    if (action === "new-certificate") {
-
-                        document.body.insertAdjacentHTML(
-                            "beforeend",
-                            itemModal("certificates")
-                        );
-
-                        return;
-                    }
-
-                    if (newType) {
-
-                        document.body.insertAdjacentHTML(
-                            "beforeend",
-                            itemModal(newType)
-                        );
-
-                        return;
-                    }
-
-                    if (editType) {
-
-                        document.body.insertAdjacentHTML(
-                            "beforeend",
-                            itemModal(
-                                editType,
-                                button.dataset.id
-                            )
-                        );
-
-                        return;
-                    }
-
-                    if (deleteType) {
-
-                        if (
-                            confirm(
-                                "Are you sure you want to delete this item?"
-                            )
-                        ) {
-
-                            records[deleteType] =
-                                records[deleteType].filter(
-                                    item =>
-                                        item.id !==
-                                        button.dataset.id
-                                );
-
-                            renderView();
-
-                            notify("Item deleted");
-                        }
-
-                        return;
-                    }
-
-                    if (action === "toggle-publish") {
-
-                        profile.portfolio_published =
-                            !profile.portfolio_published;
-
-                        renderView();
-
-                        notify(
-                            profile.portfolio_published
-                                ? "Portfolio is now public"
-                                : "Portfolio is now private"
-                        );
-
-                        return;
-                    }
-
-                    if (action === "demo") {
-
-                        user = {
-                            id: "demo-user",
-                            email: "demo@example.com"
-                        };
-
-                        profile = {
-                            full_name: "Demo User",
-                            bio: "",
-                            grade: "",
-                            section: "",
-                            school_name: "",
-                            username: "demo-user",
-                            skills: [],
-                            interests: [],
-                            portfolio_published: false
-                        };
-
-                        tab = "Overview";
-
-                        app();
-
-                        notify("Welcome to the demo!");
-
-                        return;
-                    }
-                }
-            );
-
-            /* ─────────────────────────────────────
-               PHOTO PREVIEW
-            ───────────────────────────────────── */
-
-            document.addEventListener(
-                "change",
-                event => {
-
-                    if (
-                        event.target.id !==
-                        "certificate-photo"
-                    ) return;
-
-                    const file =
-                        event.target.files[0];
-
-                    if (!file) return;
-
-                    const reader = new FileReader();
-
-                    reader.onload = loadEvent => {
-
-                        const preview =
-                            $("#photo-preview");
-
-                        preview.src =
-                            loadEvent.target.result;
-
-                        preview.style.display =
-                            "block";
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            );
-
-            /* ─────────────────────────────────────
-               FORM SUBMISSIONS
-            ───────────────────────────────────── */
-
-            document.addEventListener(
-                "submit",
-                event => {
-
-                    const form = event.target;
-
-                    if (
-                        form.id !== "auth-form" &&
-                        form.id !== "item-form" &&
-                        form.id !== "profile-form"
-                    ) {
-                        return;
-                    }
-
-                    event.preventDefault();
-
-                    /* AUTH */
-
-                    if (form.id === "auth-form") {
-
-                        user = {
-                            id: "local-user",
-                            email: $("#email").value
-                        };
-
-                        profile.full_name =
-                            $("#name")?.value ||
-                            "Pathfolio User";
-
-                        $("#modal")?.remove();
-
-                        tab = "Overview";
-
-                        app();
-
-                        notify(
-                            "Welcome to Pathfolio!"
-                        );
-
-                        return;
-                    }
-
-                    /* PROFILE */
-
-                    if (form.id === "profile-form") {
-
-                        [
-                            "full_name",
-                            "grade",
-                            "section",
-                            "school_name",
-                            "username",
-                            "bio"
-                        ].forEach(key => {
-
-                            const element =
-                                $(`#p-${key}`);
-
-                            if (element) {
-                                profile[key] =
-                                    element.value;
-                            }
-                        });
-
-                        profile.skills =
-                            $("#p-skills").value
-                                .split(",")
-                                .map(value =>
-                                    value.trim()
-                                )
-                                .filter(Boolean);
-
-                        profile.interests =
-                            $("#p-interests").value
-                                .split(",")
-                                .map(value =>
-                                    value.trim()
-                                )
-                                .filter(Boolean);
-
-                        notify(
-                            "Profile updated successfully"
-                        );
-
-                        return;
-                    }
-
-                    /* ITEMS */
-
-                    if (form.id === "item-form") {
-
-                        const type =
-                            form.dataset.type;
-
-                        const id =
-                            form.dataset.id;
-
-                        const config =
-                            configFor(type);
-
-                        const data = {
-
-                            id:
-                                id ||
-                                Date.now().toString(),
-
-                            _type: type,
-
-                            created_at:
-                                new Date().toISOString()
-                        };
-
-                        config.fields.forEach(
-                            ([key, label, fieldType]) => {
-
-                                const element =
-                                    $(`#f-${key}`);
-
-                                if (!element) return;
-
-                                data[key] =
-                                    fieldType === "checkbox"
-                                        ? element.checked
-                                        : element.value;
-                            }
-                        );
-
-                        /* Save certificate photo */
-
-                        if (
-                            type === "certificates"
-                        ) {
-
-                            const preview =
-                                $("#photo-preview");
-
-                            if (
-                                preview &&
-                                preview.src &&
-                                preview.src.startsWith(
-                                    "data:image"
-                                )
-                            ) {
-
-                                data.photo =
-                                    preview.src;
-                            }
-
-                            /*
-                             * Keep existing photo when editing
-                             * without choosing a new one.
-                             */
-
-                            if (
-                                id &&
-                                !data.photo
-                            ) {
-
-                                const old =
-                                    records[type].find(
-                                        item =>
-                                            item.id === id
-                                    );
-
-                                if (old?.photo) {
-                                    data.photo =
-                                        old.photo;
-                                }
-                            }
-                        }
-
-                        if (id) {
-
-                            const index =
-                                records[type].findIndex(
-                                    item =>
-                                        item.id === id
-                                );
-
-                            if (index > -1) {
-
-                                records[type][index] = {
-                                    ...records[type][index],
-                                    ...data
-                                };
-                            }
-
-                        } else {
-
-                            records[type].push(data);
-                        }
-
-                        $("#modal")?.remove();
-
-                        renderView();
-
-                        notify(
-                            `${config.title} saved successfully`
-                        );
-                    }
-                }
-            );
-
-            /* ─────────────────────────────────────
-               START THE APP
-            ───────────────────────────────────── */
-
-            landing();
-
-        })();
-
-    </script>
-
+        };
+
+        reader.readAsDataURL(file);
+    }
+});
+
+/* ── Form submissions ── */
+
+document.addEventListener("submit",event=>{
+    const form=event.target;
+
+    if(!["auth-form","profile-form","personalization-form","item-form"].includes(form.id))return;
+
+    event.preventDefault();
+
+    if(form.id==="auth-form"){
+        user={
+            id:"local-user",
+            email:$("#email").value
+        };
+
+        if($("#name"))profile.full_name=$("#name").value;
+        if(!profile.full_name)profile.full_name="Pathfolio User";
+
+        profile.email=user.email;
+
+        saveData();
+        $("#modal")?.remove();
+        tab="Overview";
+        app();
+        notify("Welcome to Pathfolio!");
+    }
+
+    if(form.id==="profile-form"){
+        ["full_name","grade","school_name","username","bio"].forEach(key=>{
+            profile[key]=$(`#p-${key}`)?.value||"";
+        });
+
+        profile.skills=$("#p-skills").value.split(",").map(x=>x.trim()).filter(Boolean);
+        profile.interests=$("#p-interests").value.split(",").map(x=>x.trim()).filter(Boolean);
+
+        saveData();
+        notify("Profile updated successfully");
+    }
+
+    if(form.id==="personalization-form"){
+        settings.accent=$("#accent-color").value;
+        settings.background=$("#background-color").value;
+
+        const photo=$("#profile-photo-preview");
+        if(photo?.src?.startsWith("data:image"))profile.photo=photo.src;
+
+        applyTheme();
+        saveData();
+        notify("Personalization saved!");
+    }
+
+    if(form.id==="item-form"){
+        const type=form.dataset.type;
+        const id=form.dataset.id;
+        const config=configFor(type);
+
+        const data={
+            id:id||Date.now().toString(),
+            _type:type,
+            created_at:new Date().toISOString()
+        };
+
+        config.fields.forEach(([key,,fieldType])=>{
+            const element=$(`#f-${key}`);
+            if(element)data[key]=element.value;
+        });
+
+        if(type==="certificates"){
+            const preview=$("#photo-preview");
+
+            if(preview?.src?.startsWith("data:image")){
+                data.photo=preview.src;
+            }else if(id){
+                const old=records[type].find(x=>x.id===id);
+                if(old?.photo)data.photo=old.photo;
+            }
+        }
+
+        if(id){
+            const index=records[type].findIndex(x=>x.id===id);
+            records[type][index]={...records[type][index],...data};
+        }else{
+            records[type].push(data);
+        }
+
+        saveData();
+        $("#modal")?.remove();
+        renderView();
+        notify(`${config.title} saved successfully`);
+    }
+});
+
+/* ── Start ── */
+
+loadData();
+landing();
+
+})();
+</script>
 </body>
 </html>
